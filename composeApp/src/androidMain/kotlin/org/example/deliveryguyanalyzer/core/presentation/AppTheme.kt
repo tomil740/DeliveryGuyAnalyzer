@@ -14,6 +14,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import com.example.deliveryguyincomeanalyzer.android.theme.DarkColors
 import com.example.deliveryguyincomeanalyzer.android.theme.LightColors
+import com.example.deliveryguyincomeanalyzer.android.theme.typography1
 import theme.Shapes
 
 @Composable
@@ -48,6 +49,6 @@ actual fun AppTheme(
         colorScheme = colors,
         shapes = Shapes,
         content = content,
-        typography = typography
+        typography = typography1
     )
 }

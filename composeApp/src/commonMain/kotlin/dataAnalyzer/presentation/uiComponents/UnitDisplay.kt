@@ -2,10 +2,8 @@ package dataAnalyzer.presentation.uiComponents
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -27,10 +25,11 @@ fun UnitDisplay(
     amount: Float,
     unitIcon: ImageVector,
     modifier: Modifier = Modifier,
+    unitText : String = "",
     isMainObj: Boolean = true,
     amountTextStyle: TextStyle = MaterialTheme.typography.displayMedium,
     amountColor: Color = MaterialTheme.colorScheme.onBackground,
-    unitColor:Color = MaterialTheme.colorScheme.onBackground,
+    iconColor:Color = Color.Green,
     onItemClick : ()->Unit={}) {
 
     var offset by remember { mutableStateOf(8.dp) }
@@ -45,19 +44,28 @@ fun UnitDisplay(
 
 
     Row(modifier = modifier.clickable { onItemClick() }) {
+        if (unitText != ""){
+            Text(
+                text = unitText,
+                //style = MaterialTheme.typography.,
+                style = amountTextStyle,
+                color = amountColor,
+                modifier = Modifier
+            )
+        }
         Text(
             text = valuePresentation(amount),
             //style = MaterialTheme.typography.,
             style = amountTextStyle,
             color = amountColor,
-            modifier = Modifier.alignBy(LastBaseline)
+            modifier = Modifier
         )
         //Spacer(modifier = Modifier.width(8.dp))//spacing.spaceExtraSmall))
 
         Icon(imageVector = unitIcon, contentDescription = null,modifier= Modifier
-            .offset(y = offset)
-            .size(amountTextStyle.fontSize.value.dp),
-            tint = unitColor
+            //.offset(y = offset)
+            .size(amountTextStyle.fontSize.value.dp+14.dp),
+            tint = iconColor
 
         )
 

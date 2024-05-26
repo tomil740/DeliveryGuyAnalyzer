@@ -13,9 +13,12 @@ interface SumObjectInterface {
     val baseIncome: Float
     val extraIncome: Float
     val delivers: Int
-    val averageIncomePerHour: Float
-    val averageIncomePerDelivery: Float
-    val averageIncomeSubObj:Float
+    val averageIncomePerHour1: Float
+    val averageIncomePerHour2: Float
+    val averageIncomePerDelivery1: Float
+    val averageIncomePerDelivery2: Float
+    val averageIncomeSubObj1:Float
+    val averageIncomeSubObj2:Float
     val averageTimeSubObj:Float
     val subObjects:List<SumObjectInterface>?
     val workSessionAmount:Int
@@ -31,10 +34,13 @@ data class SumObj(
     override val baseIncome: Float,
     override val extraIncome: Float,
     override val delivers: Int,
-    override val averageIncomePerHour: Float,
-    override val averageIncomePerDelivery: Float,
-    override val averageIncomeSubObj:Float,
     override val averageTimeSubObj:Float,
     override val subObjects:List<SumObjectInterface>?=null,
-    override val workSessionAmount: Int = 1
+    override val workSessionAmount: Int = 1,
+    override val averageIncomePerHour1: Float,
+    override val averageIncomePerHour2: Float,
+    override val averageIncomePerDelivery1: Float,
+    override val averageIncomePerDelivery2: Float,
+    override val averageIncomeSubObj1: Float,
+    override val averageIncomeSubObj2: Float
 ):SumObjectInterface

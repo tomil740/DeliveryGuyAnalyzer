@@ -10,19 +10,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,28 +24,31 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import dataAnalyzer.presentation.uiComponents.subFunctions.ExpandedDataItem
-import dataAnalyzer.presentation.uiComponents.subFunctions.ProgressBar
+import dataAnalyzer.domain.models.models.SumObjectInterface
 
 @Composable
-fun ArchiveItem(objectName:String,barSizeParam:Float,barValueParam:Float
-                ,subSizeParam:Float, subValueParam:Float,perHourVal : Float,perHourComparable:Float
-                ,perDeliveryVal : Float,perDeliveryComparable:Float,perSessionVal : Float,perSessionComparable:Float,
-                onHeaderClick : () ->Unit
-                ,modifier: Modifier=Modifier) {
+fun ArchiveItem(theObj:SumObjectInterface,
+    /*
+    objectName:String, barSizeParam:Float, barValComponent1:Float,barValComponent2:Float,
+                 subSizeParam:Float, subValueParam:Float, perHourVal : Float, perHourComparable:Float
+                , perDeliveryVal : Float, perDeliveryComparable:Float, perSessionVal : Float, perSessionComparable:Float,
 
+     */
+                onHeaderClick : () ->Unit
+                , modifier: Modifier=Modifier) {
+/*
     var isDefaultBar by remember { mutableStateOf(false) }
     var isExpandet by remember { mutableStateOf(false) }
     var barSize by remember { mutableStateOf(barSizeParam) }
-    var barValue by remember { mutableStateOf(barValueParam) }
+    var barValue by remember { mutableStateOf(barValComponent1+barValComponent2) }
     var subSize by remember { mutableStateOf(subSizeParam) }
     var subValue by remember { mutableStateOf(subValueParam) }
 
-    LaunchedEffect(key1 = objectName,onHeaderClick,barValueParam) {
+    LaunchedEffect(objectName,onHeaderClick,barValComponent2,barValComponent1) {
          isDefaultBar =true
          isExpandet =false
          barSize =barSizeParam
-         barValue =barValueParam
+         barValue =barValComponent1+barValComponent2
          subSize=subSizeParam
          subValue=subValueParam
 
@@ -73,6 +67,9 @@ fun ArchiveItem(objectName:String,barSizeParam:Float,barValueParam:Float
         subSize = a
     }
 
+ */
+    var itemSize by remember { mutableStateOf(0.dp) }
+    val density = LocalDensity.current
     Box(modifier = modifier
         .fillMaxWidth(), contentAlignment = Alignment.Center) {
 
@@ -97,12 +94,27 @@ fun ArchiveItem(objectName:String,barSizeParam:Float,barValueParam:Float
                 horizontalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = objectName + " :",
-                    style = MaterialTheme.typography.titleLarge,
+                    text = theObj.objectName + " :",
+                    style = MaterialTheme.typography.displaySmall,
                     color = MaterialTheme.colorScheme.onSecondaryContainer
                 )
             }
-
+            Spacer(Modifier.height(18.dp))
+            TwoValuesProgressBar(
+                barValComponent1 = theObj.baseIncome,
+                barValComponent2 = theObj.extraIncome,
+                sumObjType = theObj.objectType,
+                subBarVal = theObj.totalTime,
+                perDeliveryValue1 = theObj.averageIncomePerDelivery1,
+                perDeliveryValue2 = theObj.averageIncomePerDelivery2,
+                perHourValue1 = theObj.averageIncomePerHour1,
+                perHourValue2 = theObj.averageIncomePerHour2,
+                perSessionValue1 = theObj.averageIncomeSubObj1,
+                perSessionValue2 = theObj.averageIncomeSubObj2,
+                //should be optional according to the object type , in order to implemnt the matched data type
+                isSecondary = true
+            )
+            /*
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -164,19 +176,38 @@ fun ArchiveItem(objectName:String,barSizeParam:Float,barValueParam:Float
 
             Spacer(modifier = Modifier.height(6.dp))
 
-            ProgressBar(
-                weekTarget = barSize,
-                value = barValue,
-                modifier = Modifier
-                    .fillMaxWidth(0.9f)
-                    .height(30.dp)
-                    .align(Alignment.CenterHorizontally),
-                onItemClick = {
-                    isDefaultBar = !isDefaultBar
-                },
-                barColor = MaterialTheme.colorScheme.onSecondary,
-                valueColor = MaterialTheme.colorScheme.secondary
-            )
+            AnimatedVisibility(barValue == barValComponent1+barValComponent2){
+                ProgressBar(
+                    weekTarget = barSize, value = barValComponent1, value2 = barValComponent2,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(30.dp)
+                        .padding(start = 4.dp, end = 4.dp),
+                    onItemClick = {
+                        isDefaultBar = !isDefaultBar
+                    },
+                    barColor = MaterialTheme.colorScheme.onSecondary,
+                    value2Color = MaterialTheme.colorScheme.primary,
+                    valueColor = MaterialTheme.colorScheme.secondary
+                )
+            }
+            AnimatedVisibility(barValue != barValComponent1+barValComponent2) {
+                ProgressBar(
+                    weekTarget = barSize,
+                    value = barValue,
+                    value2 = null,
+                    modifier = Modifier
+                        .fillMaxWidth(0.9f)
+                        .height(30.dp)
+                        .align(Alignment.CenterHorizontally),
+                    onItemClick = {
+                        isDefaultBar = !isDefaultBar
+                    },
+                    barColor = MaterialTheme.colorScheme.onSecondary,
+                    valueColor = MaterialTheme.colorScheme.secondary
+                )
+            }
+
 
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -203,6 +234,8 @@ fun ArchiveItem(objectName:String,barSizeParam:Float,barValueParam:Float
                     tint = MaterialTheme.colorScheme.onSecondaryContainer
                 )
             }
+
+             */
         }
     }
 }

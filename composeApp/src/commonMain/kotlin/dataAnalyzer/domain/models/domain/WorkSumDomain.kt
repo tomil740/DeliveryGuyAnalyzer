@@ -33,10 +33,13 @@ data class WorkSumDomain(
            baseIncome=baseIncome,
       extraIncome=extraIncome,
         delivers=deliveries,
-        averageIncomePerHour= (baseIncome+extraIncome)/time ,
-       averageIncomePerDelivery=(baseIncome+extraIncome)/deliveries,
+        averageIncomePerHour1 = (baseIncome)/time ,
+            averageIncomePerHour2 =(extraIncome)/time,
+            averageIncomePerDelivery1 = baseIncome/deliveries,
+            averageIncomePerDelivery2 = extraIncome/deliveries,
+            averageIncomeSubObj1 = if(subObjects.isNotEmpty()){baseIncome/subObjects.size}else{0f},
+            averageIncomeSubObj2 = if(subObjects.isNotEmpty()){extraIncome/subObjects.size}else{0f},
             subObjects = subObjects.map { it.toSumObj() },
-            averageIncomeSubObj = if(subObjects.isNotEmpty()){baseIncome+extraIncome/subObjects.size}else{1f},
             averageTimeSubObj = time/subObjects.size,
             objectType =theType)
     }

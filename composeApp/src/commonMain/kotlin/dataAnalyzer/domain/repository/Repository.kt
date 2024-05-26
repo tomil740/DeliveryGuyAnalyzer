@@ -10,7 +10,7 @@ interface Repository {
 
     fun getFirstDeclareMonthYear():String?
 
-    fun getMonthWorkDeclare(yearMonth:String):Flow<List<WorkSumDomain>>
+    fun getMonthWorkDeclare(yearMonth:String):List<WorkSumDomain>
 
     fun getDeclareByDayOfMonth(dayOfMonth:Int):List<WorkSumDomain>
 

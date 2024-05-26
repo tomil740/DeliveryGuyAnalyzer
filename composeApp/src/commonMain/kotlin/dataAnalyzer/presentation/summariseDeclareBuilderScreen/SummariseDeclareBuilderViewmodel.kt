@@ -1,17 +1,22 @@
 package dataAnalyzer.presentation.summariseDeclareBuilderScreen
 
+import androidx.compose.runtime.mutableStateOf
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import dataAnalyzer.domain.models.builder.SummariseBuilderFieldesState
 import dataAnalyzer.domain.models.builder.SummariseBuilderState
 import dataAnalyzer.domain.models.util.helperFun.getTimeDifferent
-import dataAnalyzer.domain.useCase.SummariseBuilderUseCases
+import dataAnalyzer.domain.useCase.screenUsecases.SummariseBuilderUseCases
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -34,11 +39,14 @@ class SummariseDeclareBuilderViewmodel(val summariseBuilderUseCases: SummariseBu
 
     private val uiMessage = Channel<String>()
 
+
+    var submitJob: Job?=null
+
     private var summariseBuilderState = MutableStateFlow(SummariseBuilderState(
         startTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
         endTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
         totalTime =  getTimeDifferent(startTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).time, endTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).time)
-        , baseWage = 35f, extras = 55f, delivers = 5
+        , baseWage = 35, extras = 55f, delivers = 5
     )
     )
 
@@ -60,7 +68,7 @@ class SummariseDeclareBuilderViewmodel(val summariseBuilderUseCases: SummariseBu
                 currentSum = c,
                 totalIncome = c.totalIncome,
                 uiMessage = uiMessage,
-                errorMes = state.errorMes
+                errorMes = state.errorMes,
             )
         }.stateIn(screenModelScope, SharingStarted.WhileSubscribed(5000), _uiState.value)
 
@@ -156,18 +164,28 @@ class SummariseDeclareBuilderViewmodel(val summariseBuilderUseCases: SummariseBu
                     }
                 }
             }
-            SummariseDeclareBuilderEvents.OnSubmitDeclare -> {
+
+            SummariseDeclareBuilderEvents.OnSubmit -> {
                 if(summariseBuilderState.value.totalTime < 2f){
                     onSummariseDeclareBuilderEvent(SummariseDeclareBuilderEvents.SendUiMessage
                         ("Fail to insert ,your work declare must be in minimum of 2 hours long in order to be insert"))
                 }else {
-                    screenModelScope.launch {
-                        val result = summariseBuilderUseCases.insertWorkDeclare(summariseBuilderState.value.toWorkDeclareDto())
+                    submitJob?.cancel()
+                   submitJob = screenModelScope.launch {
+                        /*
+                        the insert use case is an suspend fucntion which means as if I would place here an delay the coroutine will be wanting
+                        for it , as with await just that the function will wait period .
+                        * accoridngly wwe will update the cahnnle whic is an aSync function as well that will update the listenter on there coroutines...
+                         */
+                       val theObj = summariseBuilderState.value.toWorkDeclareDto()
+                        val result = summariseBuilderUseCases.insertWorkDeclare(theObj)
+                       val theDate = summariseBuilderState.value.startTime
+                       val a ="${theDate.dayOfMonth}/${theDate.month.name}/${theDate.year}"
                         if(result){
                             withContext(Dispatchers.Main) {
                                 onSummariseDeclareBuilderEvent(
                                     SummariseDeclareBuilderEvents.SendUiMessage(
-                                        "new declare has been successfully added"
+                                        "new declare of $a has been successfully added"
                                     )
                                 )
                             }
@@ -175,19 +193,26 @@ class SummariseDeclareBuilderViewmodel(val summariseBuilderUseCases: SummariseBu
                             withContext(Dispatchers.Main) {
                                 onSummariseDeclareBuilderEvent(
                                     SummariseDeclareBuilderEvents.SendUiMessage(
-                                        "the new declare has been fail to insert , please try again (the builder data will be saved...)"
+                                        "the new declare of $a has been fail to insert because of an overlap with other work declare please check the date and time  ," +
+                                                "/n try again (the builder data will be saved...)"
                                     )
                                 )
                             }
                         }
                     }
                 }
-
             }
+
+
             is SummariseDeclareBuilderEvents.SendUiMessage -> {
                 screenModelScope.launch {
+                    println("sends message ")
                     uiMessage.send(event.mess)
                 }
+            }
+
+            is SummariseDeclareBuilderEvents.OnBaseWage -> {
+                summariseBuilderState.update { it.copy(baseWage = event.baseWage) }
             }
         }
     }

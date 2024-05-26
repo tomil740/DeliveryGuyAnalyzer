@@ -58,7 +58,7 @@ class SumDomainData() {
              deliveries = deliveries,
             baseIncome = baseIncome,
             extraIncome = extraIncome,
-            subObjects = a,
+            subObjects = a.reversed(),
             objectsType = objectType
         )
 

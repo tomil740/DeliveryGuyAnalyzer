@@ -4,10 +4,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,7 +18,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun CircleValues(theHeight:Dp,barSize:Float,barValue:Float,textStyle: TextStyle = MaterialTheme.typography.displayLarge,
+fun CircleValues(theHeight:Dp,barSize:Int,barValue:Float,textStyle: TextStyle = MaterialTheme.typography.displayLarge,
                  textColor:Color=MaterialTheme.colorScheme.onPrimary
 ) {
 
@@ -31,23 +29,23 @@ fun CircleValues(theHeight:Dp,barSize:Float,barValue:Float,textStyle: TextStyle 
         contentAlignment = Alignment.Center
     ) {
         Column {
-            Box(modifier = Modifier.rotate(-9f).offset(x = 12.dp)) {
+            Box(modifier = Modifier.rotate(-9f).offset(x = 28.dp)) {
                 UnitDisplay(
                     amount = barValue,
-                    unitIcon = Icons.Default.Star,//"hours /",//stringResource(id = R.string.grams),
+                    unitIcon =Icons.Default.AttachMoney,//"hours /",//stringResource(id = R.string.grams),
                     amountColor = textColor,
-                    unitColor = textColor,
-                    amountTextStyle = MaterialTheme.typography.displaySmall
+                    iconColor = textColor,
+                    amountTextStyle = MaterialTheme.typography.titleLarge
                 )
             }
 
-            Box(modifier = Modifier.offset(x = 44.dp)) {
+            Box(modifier = Modifier.offset(x = 56.dp)) {
                 UnitDisplay(
-                    amount = barSize,
-                    unitIcon = Icons.Default.Star,//stringResource(id = R.string.grams),
+                    amount = barSize.toFloat(),
+                    unitIcon = Icons.Default.AttachMoney,//stringResource(id = R.string.grams),
                     amountColor = textColor,
-                    unitColor = textColor,
-                    amountTextStyle = MaterialTheme.typography.titleLarge
+                    iconColor = textColor,
+                    amountTextStyle = MaterialTheme.typography.titleSmall
                 )
             }
         }
@@ -57,7 +55,7 @@ fun CircleValues(theHeight:Dp,barSize:Float,barValue:Float,textStyle: TextStyle 
             color = Color.Black,
             style = textStyle,
             modifier = Modifier
-                .offset(x = 24.dp)
+                .offset(x = 24.dp,y=-4.dp)
                 .rotate(78f)
         )
 

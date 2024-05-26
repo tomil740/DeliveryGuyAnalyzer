@@ -40,6 +40,7 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
+            implementation(compose.materialIconsExtended)
 
             implementation(libs.kotlinx.datetime)
             implementation(libs.dateTimePicker)
@@ -97,6 +98,7 @@ android {
     }
     dependencies {
         debugImplementation(libs.compose.ui.tooling)
+
     }
 }
 

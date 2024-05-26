@@ -31,6 +31,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,6 +49,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
@@ -59,7 +61,6 @@ import network.chaintech.ui.datepicker.WheelPicker
 import network.chaintech.ui.timepicker.WheelTimePickerDialog
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SummariseBuilderScreen(summariseBuilderStatesAndEvents: SummariseBuilderStatesAndEvents, modifier: Modifier) {
     val snackBarHostState = remember { SnackbarHostState() }
@@ -69,28 +70,19 @@ fun SummariseBuilderScreen(summariseBuilderStatesAndEvents: SummariseBuilderStat
     var showStartTimeDialog by remember { mutableStateOf(false)}
     var showEndTimeDialog by remember { mutableStateOf(false)}
 
-    var navigate by remember { mutableStateOf(false) }
-
     val theState=summariseBuilderStatesAndEvents.uiState.typeBuilderState
     var optionMenu by remember { mutableStateOf(getOptionsMenu()) }
 
     var startTimeState by remember { mutableStateOf("${theState.startTime.hour}:${theState.startTime.minute}") }
     var endTimeState by remember { mutableStateOf("${theState.endTime.hour}:${theState.endTime.minute}") }
 
+
     LaunchedEffect(theState) {
         startTimeState="${theState.startTime.hour}:${theState.startTime.minute}"
         endTimeState="${theState.endTime.hour}:${theState.endTime.minute}"
     }
 
-    LaunchedEffect(navigate){
-        if (navigate){
-            CoroutineScope(Dispatchers.Main).launch {
-                navigate = false
-                delay(1000)
-                navigator?.push(ObjectItemScreenClass())
-            }
-        }
-    }
+
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -104,7 +96,7 @@ fun SummariseBuilderScreen(summariseBuilderStatesAndEvents: SummariseBuilderStat
                         onClick = {
                             summariseBuilderStatesAndEvents.onSubmitDeclare()
                             if(summariseBuilderStatesAndEvents.uiState.typeBuilderState.totalTime > 2f) {
-                                navigate =true
+                             //   navigate =true
                             }
                             showActionOptions = !showActionOptions
                         },
@@ -125,7 +117,7 @@ fun SummariseBuilderScreen(summariseBuilderStatesAndEvents: SummariseBuilderStat
 
                     ExtendedFloatingActionButton(
                         onClick = {
-                            navigator?.push(ObjectItemScreenClass())
+                            navigator?.replaceAll(ObjectItemScreenClass())
                         },
                         containerColor = MaterialTheme.colorScheme.secondaryContainer,
                         contentColor = MaterialTheme.colorScheme.onSecondaryContainer
@@ -160,9 +152,10 @@ fun SummariseBuilderScreen(summariseBuilderStatesAndEvents: SummariseBuilderStat
 
             Column(modifier.padding(paddingVal)) {
 
-                LaunchedEffect(summariseBuilderStatesAndEvents.uiState.uiMessage) {
+                LaunchedEffect(snackBarHostState) {
                     summariseBuilderStatesAndEvents.uiState.uiMessage.consumeAsFlow().collect {
-                        snackBarHostState.showSnackbar(it, duration = SnackbarDuration.Long)
+                       // snackBarHostState.showSnackbar(it, duration = SnackbarDuration.Long)
+                        navigator?.replaceAll(ObjectItemScreenClass(builderMes = it))
                     }
                 }
 
@@ -192,10 +185,21 @@ fun SummariseBuilderScreen(summariseBuilderStatesAndEvents: SummariseBuilderStat
                             text = "${theState.startTime.date.dayOfMonth}/${theState.startTime.date.month}/${theState.startTime.date.year}"
                         )
                     }
-                    Text(
-                        modifier = Modifier.width(120.dp),
-                        text = theState.startTime.date.dayOfWeek.name
-                    )
+                    Row(modifier = Modifier.weight(1f),verticalAlignment = Alignment.CenterVertically) {
+                        Text(text = "Base wage : ",style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.primary)
+
+                        WheelPicker(
+                            startIndex = if(theState.delivers-1>0){theState.delivers-1}else{0},
+                            count = optionMenu.deliversOptions.size,
+                            rowCount = 3,
+                            texts = optionMenu.deliversOptions,
+                            contentAlignment = Alignment.Center,
+                            onScrollFinished = {summariseBuilderStatesAndEvents.onBaseWage((it+1).toString())
+                                it
+                            }
+                        )
+                    }
                 }
                 Spacer(modifier = Modifier.height(28.dp))
                 Row(

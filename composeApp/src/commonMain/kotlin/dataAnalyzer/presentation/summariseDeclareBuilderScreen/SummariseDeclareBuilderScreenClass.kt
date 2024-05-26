@@ -16,13 +16,14 @@ class SummariseDeclareBuilderScreenClass():Screen {
         val a = getScreenModel<SummariseDeclareBuilderViewmodel>()
         val state by a.state.collectAsState()
         val b = SummariseBuilderStatesAndEvents(uiState = state,
-            onSubmitDeclare = {a.onSummariseDeclareBuilderEvent(SummariseDeclareBuilderEvents.OnSubmitDeclare)},
+            onSubmitDeclare = {a.onSummariseDeclareBuilderEvent(SummariseDeclareBuilderEvents.OnSubmit)},
             onDate = {a.onSummariseDeclareBuilderEvent(SummariseDeclareBuilderEvents.OnDate(it))},
             onDelivers = {a.onSummariseDeclareBuilderEvent(SummariseDeclareBuilderEvents.OnDelivers(it))},
             onEtime = {a.onSummariseDeclareBuilderEvent(SummariseDeclareBuilderEvents.OnEndTime(it))},
             onExtra = {a.onSummariseDeclareBuilderEvent(SummariseDeclareBuilderEvents.OnExtra(it))},
-            onStime ={a.onSummariseDeclareBuilderEvent(SummariseDeclareBuilderEvents.OnStartTime(it))}
-        )
+            onStime ={a.onSummariseDeclareBuilderEvent(SummariseDeclareBuilderEvents.OnStartTime(it))},
+            onBaseWage = {a.onSummariseDeclareBuilderEvent(SummariseDeclareBuilderEvents.OnBaseWage(it.toInt()))},
+            )
 
         SummariseBuilderScreen(summariseBuilderStatesAndEvents =b ,modifier = Modifier)
     }

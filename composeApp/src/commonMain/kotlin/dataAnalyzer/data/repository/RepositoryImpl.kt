@@ -15,7 +15,7 @@ class RepositoryImpl(private val mongoDB: MongoDB):Repository {
         return mongoDB.getFirstDeclare()
     }
 
-    override fun getMonthWorkDeclare(yearMonth:String): Flow<List<WorkSumDomain>> {
+    override fun getMonthWorkDeclare(yearMonth:String): List<WorkSumDomain> {
         return mongoDB.getMonthSum(yearMonth)
     }
 

@@ -8,6 +8,7 @@ import kotlin.time.Duration.Companion.hours
 class InsertWorkDeclare(val repository:Repository) {
     suspend operator fun invoke(theDeclare: WorkDeclareDto):Boolean {
         val matched = repository.getDeclareByDayOfMonth(theDeclare.dayOfMonth)
+
         if(matched.isNotEmpty()){
             val objectEndTime = LocalDateTime.parse(theDeclare.eTime).time
             val sTime = LocalDateTime.parse(theDeclare.sTime).time
@@ -17,7 +18,7 @@ class InsertWorkDeclare(val repository:Repository) {
                val eTimeArgu = if(i.endTime.time <= i.startTime.time){i.endTime.hour+24}else{i.endTime.hour}
 
                if (sTimeArgu >= eTime || eTimeArgu <= sTime.hour){
-                   return true
+                  // return true
                }
                else if(sTimeArgu >= sTime.hour || eTimeArgu <= eTime){
                    return false

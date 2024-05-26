@@ -52,12 +52,12 @@ class MongoDB {
            ?.find()?.yearAndMonth
     }
 
-    fun getMonthSum(theMonth:String): Flow<List<WorkSumDomain>> {
+    fun getMonthSum(theMonth:String): List<WorkSumDomain> {
         return realm?.query<WorkDeclareDto>(query = "yearAndMonth == $0", theMonth)
-            ?.asFlow()?.map { it.list.toList() }?.map{it.map { workDeclareDtoToWorkSumDomain(it) }} ?: flow {
-                listOf<WorkDeclareDto>()
+            ?.find()?.toList()?.map{ workDeclareDtoToWorkSumDomain(it)} ?: listOf()
         }
-    }
-
 
 }
+
+
+

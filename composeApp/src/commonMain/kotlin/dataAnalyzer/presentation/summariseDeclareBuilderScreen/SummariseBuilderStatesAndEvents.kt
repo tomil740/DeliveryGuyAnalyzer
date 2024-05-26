@@ -1,5 +1,7 @@
 package dataAnalyzer.presentation.summariseDeclareBuilderScreen
 
+import kotlinx.coroutines.Deferred
+
 data class SummariseBuilderStatesAndEvents(
     val uiState : SummariseDeclareBuilderUiState,
     val onSubmitDeclare : ()->Unit,
@@ -8,6 +10,8 @@ data class SummariseBuilderStatesAndEvents(
     val onStime:(String)->Unit,
     val onEtime:(String)->Unit,
     val onDate:(String)->Unit,
-    val onDelivers:(String)->Unit
+    val onDelivers:(String)->Unit,
+    val onBaseWage:(String)->Unit
+
 
 )

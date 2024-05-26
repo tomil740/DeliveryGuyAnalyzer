@@ -33,34 +33,47 @@ import dataAnalyzer.presentation.uiComponents.CircleValues
 @Composable
 fun CircleProgressItem(
     valueHeader: String,
-    barSize : Float,
-    barValue : Float,
+    barSize : Int,
+    barValue1 : Float,
+    barValue2 : Float,
     barColor: Color = MaterialTheme.colorScheme.onSecondaryContainer,
-    valueColor: Color = MaterialTheme.colorScheme.secondaryContainer ,
+    value1Color: Color = MaterialTheme.colorScheme.secondaryContainer,
+    value2Color: Color = MaterialTheme.colorScheme.error,
     textColor:Color =MaterialTheme.colorScheme.onPrimary,
     modifier: Modifier
 ) {
 
 
-    val valueAnimationState = remember {
+    val baseValueAnimationState = remember {
+        Animatable(0f)
+    }
+    val extraValueAnimationState = remember {
         Animatable(0f)
     }
 
-
-    LaunchedEffect(key1 = barSize) {
+    LaunchedEffect(key1 = barSize,key2 = barValue1) {
+        val a = if(barValue1.isInfinite()||barValue1.isNaN()){10f}else{barValue1}
         //In order of catching zero and all sort of unUseable values ...
-        try {
-            valueAnimationState.animateTo(
-                targetValue =
-                    (barValue / barSize)
-                ,
-                animationSpec = tween(
-                    durationMillis = 1350
-                )
+        baseValueAnimationState.animateTo(
+            targetValue =
+            (a / barSize)
+            ,
+            animationSpec = tween(
+                durationMillis = 1350
             )
-        }catch (e:Exception){
-         //
-        }
+        )
+    }
+    LaunchedEffect(key1 = barSize,key2 = barValue2) {
+        val a = if(barValue2.isInfinite()||barValue2.isNaN()){10f}else{barValue2}
+        //In order of catching zero and all sort of unUseable values ...
+        extraValueAnimationState.animateTo(
+            targetValue =
+            (a / barSize)
+            ,
+            animationSpec = tween(
+                durationMillis = 1350
+            )
+        )
     }
 
     var itemSizeState by remember { mutableStateOf(0.dp) }
@@ -83,10 +96,13 @@ fun CircleProgressItem(
                             }
                         },
                 ) {
+
+                    val baseComponent = 270f *baseValueAnimationState.value
+
                     drawArc(
                         color = barColor,
-                        startAngle = 0f,
-                        sweepAngle = 360f,
+                        startAngle = -45f,
+                        sweepAngle = 270f,
                         useCenter = false,
                         size = size,
                         style = Stroke(
@@ -95,9 +111,21 @@ fun CircleProgressItem(
                         )
                     )
                     drawArc(
-                        color = valueColor,
-                        startAngle = -90f,
-                        sweepAngle = 360f *valueAnimationState.value,
+                        color = value2Color,
+                        startAngle = -45f,
+                        sweepAngle = baseComponent+(270f* extraValueAnimationState.value),
+                        useCenter = false,
+                        size = size,
+                        style = Stroke(
+                            width = 22.dp.toPx(),
+                            cap = StrokeCap.Round
+                        )
+                    )
+
+                    drawArc(
+                        color = value1Color,
+                        startAngle = -45f,
+                        sweepAngle = baseComponent,
                         useCenter = false,
                         size = size,
                         style = Stroke(
@@ -116,7 +144,7 @@ fun CircleProgressItem(
                     CircleValues(
                         theHeight = itemSizeState,
                         barSize,
-                        barValue,
+                        barValue1+barValue2,
                         textStyle = MaterialTheme.typography.displayMedium,
                         textColor=textColor
                     )
@@ -130,7 +158,7 @@ fun CircleProgressItem(
             Text(
                 text = valueHeader,
                 style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onPrimary
+                color = textColor
             )
 
         }

@@ -11,7 +11,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -25,7 +27,6 @@ import cafe.adriel.voyager.navigator.Navigator
 import dataAnalyzer.domain.models.models.SumObjectInterface
 import dataAnalyzer.domain.models.util.closeTypesCollections.SumObjectsType
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import org.mongodb.kbson.serialization.EJson
 
 
 @Composable
@@ -49,13 +50,6 @@ fun MainObjectHeaderItem(
     navigator: Navigator?,
     modifier: Modifier = Modifier) {
 
-    /*
-    ToDo:
-    need to define two Ui host states to host the picked graph values
-    in order to preforme an wwitch on user click ...
-     */
-
-
     Box(modifier = modifier
         , contentAlignment = Alignment.TopEnd) {
 
@@ -70,28 +64,35 @@ fun MainObjectHeaderItem(
                 )
                 .background(MaterialTheme.colorScheme.primary)
         ) {
-            Row {
+            Row(modifier=Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.Center) {
                 Text(
                     text = mainObjectHeaderItemData.objectName,
-                    style = MaterialTheme.typography.titleLarge,
+                    style = MaterialTheme.typography.displaySmall,
                     modifier =
                     Modifier.clickable { onMainObjectClick(mainObjectHeaderItemData.objectName) }//need to set some navigation function ore somthing  }
                         // .align(alignment = Alignment.CenterHorizontally)
                         .padding(start = 12.dp),
                     color = MaterialTheme.colorScheme.onPrimary
                 )
-            }
 
-                if(!isBuilder&&mainObjectHeaderItemData.objectType!=SumObjectsType.AllTimeSum){
-                    Row(modifier=Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                        OutlinedButton(onClick = {onValueArchivePick("")}){
-                            Text("All Time data", color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        }
+                if (!isBuilder && mainObjectHeaderItemData.objectType != SumObjectsType.AllTimeSum) {
+
+                    Spacer(Modifier.width(22.dp))
+
+                    OutlinedButton(colors = ButtonDefaults.buttonColors().copy(
+                        containerColor = MaterialTheme.colorScheme.onPrimary,
+                        contentColor = MaterialTheme.colorScheme.primary
+                    ),
+                        onClick = { onValueArchivePick("") }) {
+                        Text(
+                            "All Time",
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     }
                 }
+            }
 
-                Spacer(modifier = Modifier.height(16.dp))
-
+            Spacer(modifier = Modifier.height(21.dp))
 
             Row(
                 modifier = Modifier
@@ -100,17 +101,17 @@ fun MainObjectHeaderItem(
             )
             {
                 TwoValuesProgressBar(
-                    barVal = mainObjectHeaderItemData.totalIncome,
-                    comparableVal = 10000f,//should be constaent to each sumobject type.,
+                    barValComponent1 = mainObjectHeaderItemData.baseIncome,
+                    barValComponent2 = mainObjectHeaderItemData.extraIncome,
                     subBarVal = mainObjectHeaderItemData.totalTime,
-                    subComparableVal = 200f,
-                    perDeliveryValue = mainObjectHeaderItemData.averageIncomePerDelivery,
-                    perDeliveryComparable = 29f,//the average delivers per ...,
-                    perHourComparable = 50f,
-                    perHourValue = mainObjectHeaderItemData.averageIncomePerHour,
-                    //should be optional according to the object type , in order to implemnt the matched data type
-                    perSessionValue = 350f ,//
-                    perSessionComparable = 400f,
+                    sumObjType = mainObjectHeaderItemData.objectType,
+                    perDeliveryValue1 = mainObjectHeaderItemData.averageIncomePerDelivery1,
+                    perDeliveryValue2 = mainObjectHeaderItemData.averageIncomePerDelivery2,
+                    perHourValue1 = mainObjectHeaderItemData.averageIncomePerHour1,
+                    perHourValue2 = mainObjectHeaderItemData.averageIncomePerHour2,
+                    perSessionValue1 = mainObjectHeaderItemData.averageIncomeSubObj1,
+                    perSessionValue2 = mainObjectHeaderItemData.averageIncomeSubObj2,
+                    stayExpended = if (mainObjectHeaderItemData.objectType == SumObjectsType.WorkSession && mainObjectHeaderItemData.objectName!="Builder Data"){true}else{false}
                 )
             }
 
