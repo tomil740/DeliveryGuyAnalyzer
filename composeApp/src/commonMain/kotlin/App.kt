@@ -3,6 +3,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.intl.Locale
 import cafe.adriel.voyager.navigator.Navigator
 import dataAnalyzer.data.localDb.MongoDB
 import dataAnalyzer.data.repository.RepositoryImpl
@@ -16,7 +17,12 @@ import dataAnalyzer.domain.useCase.screenUsecases.SummariseBuilderUseCases
 import dataAnalyzer.presentation.objectItemScreen.ObjectItemScreenClass
 import dataAnalyzer.presentation.objectItemScreen.ObjectItemViewmodel
 import dataAnalyzer.presentation.summariseDeclareBuilderScreen.SummariseDeclareBuilderViewmodel
+import deliveryguyanalyzer.composeapp.generated.resources.Res
+import deliveryguyanalyzer.composeapp.generated.resources.income_prefix
 import org.example.deliveryguyanalyzer.core.presentation.AppTheme
+import org.jetbrains.compose.resources.Resource
+import org.jetbrains.compose.resources.stringResource
+import org.koin.core.KoinApplication.Companion.init
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 
@@ -26,19 +32,29 @@ fun App(
     darkTheme: Boolean =false,
     dynamicColor: Boolean=true
 ) {
-    initializeKoin()
+
+//todo : need to figure out how that should be realy solve (init / some intalize function ...)
+   try {
+       initializeKoin()
+   }catch (e:Exception){
+       //
+   }
+
 
     AppTheme(
         darkTheme = darkTheme,
         dynamicColor = dynamicColor
     ) {
 
+
+
         Surface(
             modifier = Modifier.fillMaxSize(),
         ) {
-            println("the color IOS is ${MaterialTheme.colorScheme.background}")
             Navigator(ObjectItemScreenClass())
         }
+
+
 
 
     }

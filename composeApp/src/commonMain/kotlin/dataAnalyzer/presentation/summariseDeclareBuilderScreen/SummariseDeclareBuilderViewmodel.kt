@@ -1,22 +1,23 @@
 package dataAnalyzer.presentation.summariseDeclareBuilderScreen
 
-import androidx.compose.runtime.mutableStateOf
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import dataAnalyzer.domain.models.builder.SummariseBuilderFieldesState
 import dataAnalyzer.domain.models.builder.SummariseBuilderState
 import dataAnalyzer.domain.models.util.helperFun.getTimeDifferent
 import dataAnalyzer.domain.useCase.screenUsecases.SummariseBuilderUseCases
-import kotlinx.coroutines.Deferred
+import dataAnalyzer.presentation.util.UiText
+import deliveryguyanalyzer.composeapp.generated.resources.Res
+import deliveryguyanalyzer.composeapp.generated.resources.fail_overlap_insert_mes
+import deliveryguyanalyzer.composeapp.generated.resources.fail_time_insert_mes
+import deliveryguyanalyzer.composeapp.generated.resources.success_insert_mes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -29,6 +30,7 @@ import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 
 class SummariseDeclareBuilderViewmodel(val summariseBuilderUseCases: SummariseBuilderUseCases):ScreenModel {
     /*
@@ -37,7 +39,7 @@ class SummariseDeclareBuilderViewmodel(val summariseBuilderUseCases: SummariseBu
     */
     private val builderValuesStateNotes = MutableStateFlow(SummariseBuilderFieldesState(false,false,false))
 
-    private val uiMessage = Channel<String>()
+    private val uiMessage = Channel<UiText>()
 
 
     var submitJob: Job?=null
@@ -55,7 +57,8 @@ class SummariseDeclareBuilderViewmodel(val summariseBuilderUseCases: SummariseBu
         currentSum = summariseBuilderState.value.toWorkSessionSum(),
         uiMessage = uiMessage,
         typeBuilderState = summariseBuilderState.value,
-        errorMes = "Clear",
+        errorMes = UiText.DynamicString("Clear"),
+        dayOfMonthMenu = listOf()
     ))
 
     val state : StateFlow<SummariseDeclareBuilderUiState> =
@@ -69,6 +72,7 @@ class SummariseDeclareBuilderViewmodel(val summariseBuilderUseCases: SummariseBu
                 totalIncome = c.totalIncome,
                 uiMessage = uiMessage,
                 errorMes = state.errorMes,
+                dayOfMonthMenu = state.dayOfMonthMenu
             )
         }.stateIn(screenModelScope, SharingStarted.WhileSubscribed(5000), _uiState.value)
 
@@ -87,13 +91,14 @@ class SummariseDeclareBuilderViewmodel(val summariseBuilderUseCases: SummariseBu
                     if(theMes == "")
                         theMes = "Nice work session!"
 
-                    _uiState.update { it.copy(errorMes = theMes) }
+                    _uiState.update { it.copy(errorMes = UiText.DynamicString(theMes)) }
                 }
             }
         }
 
     }
 
+    @OptIn(ExperimentalResourceApi::class)
     fun onSummariseDeclareBuilderEvent(event:SummariseDeclareBuilderEvents){
         when(event){
             is SummariseDeclareBuilderEvents.OnDate -> {
@@ -125,10 +130,11 @@ class SummariseDeclareBuilderViewmodel(val summariseBuilderUseCases: SummariseBu
                 } catch (e: Exception) {
                     -1f
                 }
-                if (totalTime > 23 || totalTime == -1f) {
-                    onSummariseDeclareBuilderEvent(
-                        SummariseDeclareBuilderEvents.SendUiMessage("The declared time is illegal, the maximum length of an workSession is 23 hours...")
-                    )
+                if (totalTime > 24 || totalTime == -1f) {
+                    println("exception if -1f $totalTime ")
+                    //onSummariseDeclareBuilderEvent(
+                       // SummariseDeclareBuilderEvents.SendUiMessage("The declared time is illegal, the maximum length of an workSession is 23 hours...")
+                    //)
                 } else {
                     summariseBuilderState.update { it.copy(endTime = theResult, totalTime = totalTime) }
                     if (totalTime < 4 || totalTime > 14) {
@@ -152,9 +158,9 @@ class SummariseDeclareBuilderViewmodel(val summariseBuilderUseCases: SummariseBu
                 var theResult=LocalDateTime(date = summariseBuilderState.value.startTime.date, time = a)
                 val totalTime = try { getTimeDifferent(startTime = theResult.time, endTime = summariseBuilderState.value.endTime.time)
                 }catch (e:Exception){ -1f}
-                if(totalTime > 23 || totalTime == -1f){
-                    onSummariseDeclareBuilderEvent(SummariseDeclareBuilderEvents.
-                    SendUiMessage("The declared time is illegal, the maximum length of an workSession is 23 hours..."))
+                if(totalTime > 24 || totalTime == -1f){
+                    //onSummariseDeclareBuilderEvent(SummariseDeclareBuilderEvents.
+                    //SendUiMessage("The declared time is illegal, the maximum length of an workSession is 23 hours..."))
                 }else{
                     summariseBuilderState.update { it.copy(startTime = theResult, totalTime = totalTime) }
                     if(totalTime < 4 || totalTime > 14) {
@@ -166,9 +172,10 @@ class SummariseDeclareBuilderViewmodel(val summariseBuilderUseCases: SummariseBu
             }
 
             SummariseDeclareBuilderEvents.OnSubmit -> {
+
                 if(summariseBuilderState.value.totalTime < 2f){
                     onSummariseDeclareBuilderEvent(SummariseDeclareBuilderEvents.SendUiMessage
-                        ("Fail to insert ,your work declare must be in minimum of 2 hours long in order to be insert"))
+                        (UiText.StringResource(Res.string.fail_time_insert_mes)))
                 }else {
                     submitJob?.cancel()
                    submitJob = screenModelScope.launch {
@@ -184,19 +191,17 @@ class SummariseDeclareBuilderViewmodel(val summariseBuilderUseCases: SummariseBu
                         if(result){
                             withContext(Dispatchers.Main) {
                                 onSummariseDeclareBuilderEvent(
-                                    SummariseDeclareBuilderEvents.SendUiMessage(
-                                        "new declare of $a has been successfully added"
-                                    )
+                                    SummariseDeclareBuilderEvents.SendUiMessage
+                                        (UiText.StringResource(Res.string.success_insert_mes,a))
                                 )
+
                             }
                         }else {
                             withContext(Dispatchers.Main) {
                                 onSummariseDeclareBuilderEvent(
                                     SummariseDeclareBuilderEvents.SendUiMessage(
-                                        "the new declare of $a has been fail to insert because of an overlap with other work declare please check the date and time  ," +
-                                                "/n try again (the builder data will be saved...)"
+                                        UiText.StringResource(Res.string.fail_overlap_insert_mes,a))
                                     )
-                                )
                             }
                         }
                     }
@@ -206,7 +211,6 @@ class SummariseDeclareBuilderViewmodel(val summariseBuilderUseCases: SummariseBu
 
             is SummariseDeclareBuilderEvents.SendUiMessage -> {
                 screenModelScope.launch {
-                    println("sends message ")
                     uiMessage.send(event.mess)
                 }
             }

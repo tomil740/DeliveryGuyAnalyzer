@@ -23,6 +23,4 @@ fun getTimeDifferent(startTime: LocalTime, endTime: LocalTime):Float{
     }
 
     return (a.hour + (a.minute.toFloat()/60.0).toFloat())
-
-
 }

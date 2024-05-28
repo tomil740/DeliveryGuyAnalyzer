@@ -25,7 +25,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import dataAnalyzer.domain.models.util.closeTypesCollections.SumObjectsType
 import dataAnalyzer.presentation.util.DefaultData
+import deliveryguyanalyzer.composeapp.generated.resources.Res
+import deliveryguyanalyzer.composeapp.generated.resources.base_prefix
+import deliveryguyanalyzer.composeapp.generated.resources.per_delivery
+import deliveryguyanalyzer.composeapp.generated.resources.per_hour
+import deliveryguyanalyzer.composeapp.generated.resources.per_session
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.stringResource
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ExpandedDataItem(isExpended:Boolean, isDefaultParam:Boolean=true,
                      perHourValue1:Float , perHourValue2:Float ,
@@ -54,11 +62,10 @@ fun ExpandedDataItem(isExpended:Boolean, isDefaultParam:Boolean=true,
 
     AnimatedVisibility(isExpended) {
 
-        val mode = Modifier.height(200.dp)
 
-        Box(modifier = if(perSessionValue1!=0f){mode.clickable { isDefault=!isDefault }}else{mode}) {
+        Box(modifier = Modifier.height(200.dp).clickable { isDefault=!isDefault }){
 
-            AnimatedContent(targetState = isDefault, label = "",
+            AnimatedContent(targetState = if(perSessionValue1!=0f){isDefault }else{false},
                 transitionSpec = {
                     fadeIn(
                         animationSpec = tween(3000)
@@ -68,7 +75,7 @@ fun ExpandedDataItem(isExpended:Boolean, isDefaultParam:Boolean=true,
                     true -> {
                         Row(Modifier.padding(16.dp)) {
                             CircleProgressItem(
-                                valueHeader = "Per Session ",
+                                valueHeader = stringResource(Res.string.per_session),
                                 barSize = perSessionComparable.theVal,
                                 barValue1 = perSessionValue1,
                                 barValue2 = perSessionValue2,
@@ -84,7 +91,7 @@ fun ExpandedDataItem(isExpended:Boolean, isDefaultParam:Boolean=true,
 
                         Row(Modifier.padding(16.dp)) {
                             CircleProgressItem(
-                                valueHeader = "Per Delivery",
+                                valueHeader = stringResource(Res.string.per_delivery),
                                 barSize = perDeliveryComparable.theVal,
                                 barValue1 = perDeliveryValue1,
                                 barValue2 = perDeliveryValue2,
@@ -98,7 +105,7 @@ fun ExpandedDataItem(isExpended:Boolean, isDefaultParam:Boolean=true,
                             Spacer(modifier = Modifier.width(32.dp))
 
                             CircleProgressItem(
-                                valueHeader = "Per Hour",
+                                valueHeader = stringResource(Res.string.per_hour),
                                 barSize = perHourComparable.theVal,
                                 barValue1 = perHourValue1,
                                 barValue2 = perHourValue2,

@@ -44,6 +44,7 @@ import dataAnalyzer.domain.models.util.closeTypesCollections.SumObjectsType
 import dataAnalyzer.presentation.summariseDeclareBuilderScreen.SummariseDeclareBuilderScreenClass
 import dataAnalyzer.presentation.uiComponents.ArchiveItem
 import dataAnalyzer.presentation.uiComponents.MainObjectHeaderItem
+import dataAnalyzer.presentation.util.UiText
 import io.github.alexzhirkevich.cupertino.ExperimentalCupertinoApi
 import io.github.alexzhirkevich.cupertino.adaptive.ExperimentalAdaptiveApi
 import kotlinx.coroutines.flow.collectLatest
@@ -53,7 +54,7 @@ import kotlinx.coroutines.flow.consumeAsFlow
     ExperimentalMaterial3Api::class
 )
 @Composable
-fun ObjectItemScreen(initializeObj: SumObjectInterface? =null,builderMes:String? = null,
+fun ObjectItemScreen(initializeObj: SumObjectInterface? =null,builderMes:UiText? = null,
                      objectItemStatesAndEvents: ObjectItemStatesAndEvents, modifier: Modifier = Modifier) {
 
     val snackBarHostState = remember { SnackbarHostState() }
@@ -64,11 +65,12 @@ fun ObjectItemScreen(initializeObj: SumObjectInterface? =null,builderMes:String?
    * in addition we we will place an flag to pick between current month to all time according to this argument as well
     */
     if(builderMes!=null) {
-        if(builderMes==""){
+        val a = builderMes.asString()
+        if(a==""){
             objectItemStatesAndEvents.onAllTimeData()
         }else {
             LaunchedEffect(snackBarHostState) {
-                snackBarHostState.showSnackbar(builderMes, duration = SnackbarDuration.Short)
+                snackBarHostState.showSnackbar(a, duration = SnackbarDuration.Short)
             }
         }
     }
@@ -123,19 +125,11 @@ fun ObjectItemScreen(initializeObj: SumObjectInterface? =null,builderMes:String?
                 MainObjectHeaderItem(
                     //the arcive comparable pick will be on the spesifc matched function
                     mainObjectHeaderItemData = objectItemStatesAndEvents.uiState.objectValueSum,
-                    navigator = navigator,
-                    navToPlatformContext = "",
                     onMainObjectClick = { },
-                    onValueArchivePick = {
+                    onTopArchiveButton = {
                         //without applying new navigation we will stay on the old initalize function again...
-                        navigator.replaceAll(ObjectItemScreenClass(builderMes=""))
+                        navigator.replaceAll(ObjectItemScreenClass(builderMes=UiText.DynamicString("")))
                     },
-                    onComparableGeneralStatPick = {},
-                    onComparableUserStatPick = {},
-                    onValueUserStatPick = {},
-                    onValueGeneralStatPick = {},
-                    navToPlatformBuilder = {},
-                    isBuilder = false,
                     modifier = modifier
                 )
 

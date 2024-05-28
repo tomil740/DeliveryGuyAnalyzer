@@ -7,7 +7,12 @@ plugins {
     alias(libs.plugins.realm.plugin)
 }
 
+
 kotlin {
+    task("testClasses")
+
+
+
     androidTarget {
         compilations.all {
             kotlinOptions {
@@ -26,8 +31,10 @@ kotlin {
             isStatic = true
         }
     }
+
     
     sourceSets {
+
         
         androidMain.dependencies {
             implementation(libs.compose.ui.tooling.preview)
@@ -44,6 +51,7 @@ kotlin {
 
             implementation(libs.kotlinx.datetime)
             implementation(libs.dateTimePicker)
+            implementation(libs.dateTimePicker2)
 
             implementation(libs.navigator)
             implementation(libs.navigator.screen.model)
@@ -63,9 +71,12 @@ kotlin {
             implementation(libs.moko.flow.compose)
 
             implementation(libs.cupertino)
+
+
         }
     }
 }
+
 
 android {
     namespace = "org.example.deliveryguyanalyzer"

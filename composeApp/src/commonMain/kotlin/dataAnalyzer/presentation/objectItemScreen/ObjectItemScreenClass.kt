@@ -7,9 +7,10 @@ import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
 import dataAnalyzer.domain.models.models.SumObjectInterface
+import dataAnalyzer.presentation.util.UiText
 
 
-class ObjectItemScreenClass(private val initializeObj: SumObjectInterface? = null,private val builderMes:String? = null):Screen {
+class ObjectItemScreenClass(private val initializeObj: SumObjectInterface? = null,private val builderMes:UiText? = null):Screen {
 
     @Composable
     override fun Content() {

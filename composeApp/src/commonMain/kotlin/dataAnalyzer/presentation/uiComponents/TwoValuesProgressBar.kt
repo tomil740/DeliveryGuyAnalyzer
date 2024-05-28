@@ -30,11 +30,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import dataAnalyzer.domain.models.util.closeTypesCollections.SumObjectsType
 import dataAnalyzer.presentation.util.DefaultData
 import dataAnalyzer.presentation.uiComponents.subFunctions.ExpandedDataItem
 import dataAnalyzer.presentation.uiComponents.subFunctions.ProgressBar
+import deliveryguyanalyzer.composeapp.generated.resources.Res
+import deliveryguyanalyzer.composeapp.generated.resources.base_prefix
+import deliveryguyanalyzer.composeapp.generated.resources.extra_prefix
+import deliveryguyanalyzer.composeapp.generated.resources.income_prefix
+import deliveryguyanalyzer.composeapp.generated.resources.total_income_prefix
+import deliveryguyanalyzer.composeapp.generated.resources.total_time_prefix
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.Resource
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
 
 
 /*
@@ -46,6 +57,7 @@ technical to know :
 * the function manges two states of itSelf in order to switch between attributes (main/sub) on demand
  */
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun TwoValuesProgressBar(barValComponent1:Float, barValComponent2:Float, sumObjType:SumObjectsType,
                          subBarVal:Float, perHourValue1:Float = 0f, perHourValue2:Float = 0f,
@@ -72,7 +84,7 @@ fun TwoValuesProgressBar(barValComponent1:Float, barValComponent2:Float, sumObjT
         DefaultData().getMainColors()}
 
     //Todo need to be define on matched resource file
-    val constList = listOf("Total income :","working time :")
+    val constList = listOf(stringResource(Res.string.total_income_prefix),stringResource(Res.string.total_time_prefix))
 
     //the data local state holders , in order of switching between data on demand
     var barSize by remember { mutableStateOf(comparableValObj.theVal) }
@@ -236,7 +248,7 @@ the full comparable data header
                         Spacer(Modifier.width(3.dp))
 
                         Text(
-                            "* Base ${barValComponent1.toInt()}$",
+                            stringResource(Res.string.base_prefix,barValComponent1.toInt()),
                             style = MaterialTheme.typography.titleSmall,
                             color = colors.valueColor
                         )
@@ -244,7 +256,7 @@ the full comparable data header
                         Spacer(Modifier.width(12.dp))
 
                         Text(
-                            "* Extra ${barValComponent2.toInt()}$",
+                            stringResource(Res.string.extra_prefix,barValComponent2.toInt()),
                             style = MaterialTheme.typography.titleSmall,
                             color = colors.value2Color
                         )

@@ -48,7 +48,7 @@ data class SummariseBuilderState(
         return SumObj(
             startTime = startTime,
             endTime = endTime,
-            objectName = "${startTime.dayOfWeek.name} ,${startTime.dayOfMonth}/${startTime.month.name}/${startTime.year}",
+            objectName = "Builder data",
             totalTime = theTime,
             baseIncome = baseIncome,
             extraIncome = extras,
