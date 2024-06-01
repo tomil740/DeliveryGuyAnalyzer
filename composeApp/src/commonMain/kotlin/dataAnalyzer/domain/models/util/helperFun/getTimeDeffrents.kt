@@ -2,6 +2,10 @@ package dataAnalyzer.domain.models.util.helperFun
 
 import kotlinx.datetime.LocalTime
 
+/*
+This function get two local time argument and calculate the time different in float between them
+todo : should be tested properly with unit test
+ */
 fun getTimeDifferent(startTime: LocalTime, endTime: LocalTime):Float{
     var a: LocalTime
 

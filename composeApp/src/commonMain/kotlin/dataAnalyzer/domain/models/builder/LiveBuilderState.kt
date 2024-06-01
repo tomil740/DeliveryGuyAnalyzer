@@ -1,6 +1,6 @@
 package dataAnalyzer.domain.models.builder
 
-import dataAnalyzer.domain.models.models.SumObj
+import dataAnalyzer.domain.models.models.SumObjDomain
 import dataAnalyzer.domain.models.util.closeTypesCollections.SumObjectsType
 import dataAnalyzer.domain.models.util.helperFun.getTimeDifferent
 import kotlinx.datetime.LocalDateTime
@@ -15,11 +15,11 @@ data class LiveBuilderState(
     val delivers : Int,
     val deliversItem: List<LiveDeliveryItem>
 ){
-    fun toWorkSessionSum(): SumObj {
+    fun toWorkSessionSum(): SumObjDomain {
         val theTime = getTimeDifferent(startTime =  startTime.time, endTime =  endTime.time)
         val baseIncome = baseWage*theTime
 
-        return SumObj(startTime =  startTime, endTime = endTime, objectName = "${startTime.dayOfWeek.name} ${startTime.dayOfMonth}/${startTime.month.name}/${startTime.year}",
+        return SumObjDomain(startTime =  startTime, endTime = endTime, objectName = "${startTime.dayOfWeek.name} ${startTime.dayOfMonth}/${startTime.month.name}/${startTime.year}",
             totalTime = theTime,  baseIncome = baseIncome
             , extraIncome = extras, totalIncome = baseIncome+extras
             , delivers = delivers, averageIncomePerDelivery1 = (baseIncome)/delivers,averageIncomePerDelivery2 = (extras)/delivers,

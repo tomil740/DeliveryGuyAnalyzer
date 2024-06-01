@@ -2,7 +2,7 @@ package dataAnalyzer.presentation.summariseDeclareBuilderScreen
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import dataAnalyzer.domain.models.builder.SummariseBuilderFieldesState
+import dataAnalyzer.domain.models.builder.SummariseBuilderFieldsState
 import dataAnalyzer.domain.models.builder.SummariseBuilderState
 import dataAnalyzer.domain.models.util.helperFun.getTimeDifferent
 import dataAnalyzer.domain.useCase.screenUsecases.SummariseBuilderUseCases
@@ -10,7 +10,11 @@ import dataAnalyzer.presentation.util.UiText
 import deliveryguyanalyzer.composeapp.generated.resources.Res
 import deliveryguyanalyzer.composeapp.generated.resources.fail_overlap_insert_mes
 import deliveryguyanalyzer.composeapp.generated.resources.fail_time_insert_mes
+import deliveryguyanalyzer.composeapp.generated.resources.good_work_session
 import deliveryguyanalyzer.composeapp.generated.resources.success_insert_mes
+import deliveryguyanalyzer.composeapp.generated.resources.there_is_no_delivers_mes
+import deliveryguyanalyzer.composeapp.generated.resources.there_is_no_tips_mes
+import deliveryguyanalyzer.composeapp.generated.resources.there_is_not_enough_time_length_mes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -31,13 +35,15 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.getString
 
+@OptIn(ExperimentalResourceApi::class)
 class SummariseDeclareBuilderViewmodel(val summariseBuilderUseCases: SummariseBuilderUseCases):ScreenModel {
     /*
    comparedObj :
    an component of the uiState object , will be an workSession sum (at this screen) , we will get the average of them from our db archive ...
     */
-    private val builderValuesStateNotes = MutableStateFlow(SummariseBuilderFieldesState(false,false,false))
+    private val builderValuesStateNotes = MutableStateFlow(SummariseBuilderFieldsState(false,false,false))
 
     private val uiMessage = Channel<UiText>()
 
@@ -54,7 +60,7 @@ class SummariseDeclareBuilderViewmodel(val summariseBuilderUseCases: SummariseBu
 
     private var _uiState = MutableStateFlow(SummariseDeclareBuilderUiState(
         totalIncome = (summariseBuilderState.value.totalTime*summariseBuilderState.value.baseWage)+summariseBuilderState.value.extras,
-        currentSum = summariseBuilderState.value.toWorkSessionSum(),
+        currentSum = summariseBuilderState.value.toSumObjDomain(),
         uiMessage = uiMessage,
         typeBuilderState = summariseBuilderState.value,
         errorMes = UiText.DynamicString("Clear"),
@@ -65,7 +71,7 @@ class SummariseDeclareBuilderViewmodel(val summariseBuilderUseCases: SummariseBu
         combine(summariseBuilderState, _uiState) {
                 typeBuilderState, state ->
             //update the builder state accordingly with the data of it as well
-            val c = typeBuilderState.toWorkSessionSum()
+            val c = typeBuilderState.toSumObjDomain()
             SummariseDeclareBuilderUiState(
                 typeBuilderState=typeBuilderState,
                 currentSum = c,
@@ -83,13 +89,13 @@ class SummariseDeclareBuilderViewmodel(val summariseBuilderUseCases: SummariseBu
                 builderValuesStateNotes.collect{
                     var theMes = ""
                     if (!it.delivers)
-                        theMes+="There is no delivers ?"
+                        theMes+= getString(Res.string.there_is_no_delivers_mes)
                     if (!it.extra)
-                        theMes+="There is no tips ?"
+                        theMes+=getString(Res.string.there_is_no_tips_mes)
                     if (!it.totalTime)
-                        theMes+="This is unusual work Session time length"
+                        theMes+=getString(Res.string.there_is_not_enough_time_length_mes)
                     if(theMes == "")
-                        theMes = "Nice work session!"
+                        theMes = getString(Res.string.good_work_session)
 
                     _uiState.update { it.copy(errorMes = UiText.DynamicString(theMes)) }
                 }
@@ -132,9 +138,6 @@ class SummariseDeclareBuilderViewmodel(val summariseBuilderUseCases: SummariseBu
                 }
                 if (totalTime > 24 || totalTime == -1f) {
                     println("exception if -1f $totalTime ")
-                    //onSummariseDeclareBuilderEvent(
-                       // SummariseDeclareBuilderEvents.SendUiMessage("The declared time is illegal, the maximum length of an workSession is 23 hours...")
-                    //)
                 } else {
                     summariseBuilderState.update { it.copy(endTime = theResult, totalTime = totalTime) }
                     if (totalTime < 4 || totalTime > 14) {
@@ -184,7 +187,7 @@ class SummariseDeclareBuilderViewmodel(val summariseBuilderUseCases: SummariseBu
                         for it , as with await just that the function will wait period .
                         * accoridngly wwe will update the cahnnle whic is an aSync function as well that will update the listenter on there coroutines...
                          */
-                       val theObj = summariseBuilderState.value.toWorkDeclareDto()
+                       val theObj = summariseBuilderState.value
                         val result = summariseBuilderUseCases.insertWorkDeclare(theObj)
                        val theDate = summariseBuilderState.value.startTime
                        val a ="${theDate.dayOfMonth}/${theDate.month.name}/${theDate.year}"

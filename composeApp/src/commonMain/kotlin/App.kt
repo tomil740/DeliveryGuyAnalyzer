@@ -18,7 +18,6 @@ import dataAnalyzer.presentation.objectItemScreen.ObjectItemScreenClass
 import dataAnalyzer.presentation.objectItemScreen.ObjectItemViewmodel
 import dataAnalyzer.presentation.summariseDeclareBuilderScreen.SummariseDeclareBuilderViewmodel
 import deliveryguyanalyzer.composeapp.generated.resources.Res
-import deliveryguyanalyzer.composeapp.generated.resources.income_prefix
 import org.example.deliveryguyanalyzer.core.presentation.AppTheme
 import org.jetbrains.compose.resources.Resource
 import org.jetbrains.compose.resources.stringResource
@@ -54,8 +53,8 @@ fun App(
             Navigator(ObjectItemScreenClass())
         }
 
-
-
+        //todo need to be erase
+        println("${Locale.current.language} and region is ${Locale.current.region} ")
 
     }
 }

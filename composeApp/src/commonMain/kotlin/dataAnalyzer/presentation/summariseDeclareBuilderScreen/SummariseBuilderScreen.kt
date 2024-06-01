@@ -74,29 +74,33 @@ import kotlin.math.round
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun SummariseBuilderScreen(summariseBuilderStatesAndEvents: SummariseBuilderStatesAndEvents, modifier: Modifier) {
-    val snackBarHostState = remember { SnackbarHostState() }
-    val navigator = LocalNavigator.current
-    var showActionOptions by remember { mutableStateOf(false) }
-    //var showDateDialog by remember { mutableStateOf(false) }
-    var showBasePickerDialog by remember { mutableStateOf(false) }
-    //var showEndTimeDialog by remember { mutableStateOf(false) }
 
+    //the navigator reference , should be implement I think its lazy (todo need to check )
+    val navigator = LocalNavigator.current
+
+    //helper reference exactly as doing ,summariseBuilderStatesAndEvents.uiState.typeBuilderState to each one
     val theState = summariseBuilderStatesAndEvents.uiState.typeBuilderState
+
+    //local screen state (UI states...)
+    val snackBarHostState = remember { SnackbarHostState() }
+    var showActionOptions by remember { mutableStateOf(false) }
+    var showBasePickerDialog by remember { mutableStateOf(false) }
+
+    //reference to an constent values for our options menu , saves as a state to avoid repulling on every recompositon
     var optionMenu by remember { mutableStateOf(getOptionsMenu()) }
 
-    var startTimeState by remember { mutableStateOf("${theState.startTime.hour}:${theState.startTime.minute}") }
-    var endTimeState by remember { mutableStateOf("${theState.endTime.hour}:${theState.endTime.minute}") }
 
-
-    LaunchedEffect(theState) {
-        startTimeState = "${theState.startTime.hour}:${theState.startTime.minute}"
-        endTimeState = "${theState.endTime.hour}:${theState.endTime.minute}"
-    }
-
-
+    //for live presentation of the state
+    //todo need to delete this , as for now I dont understand why would I implement this...
+  //  var startTimeState by remember { mutableStateOf("${theState.startTime.hour}:${theState.startTime.minute}") }
+    //var endTimeState by remember { mutableStateOf("${theState.endTime.hour}:${theState.endTime.minute}")
+   // LaunchedEffect(theState) {
+       // startTimeState = "${theState.startTime.hour}:${theState.startTime.minute}"
+      //  endTimeState = "${theState.endTime.hour}:${theState.endTime.minute}"
+ //   }
 
     Scaffold(
-        modifier =modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         snackbarHost = {
             SnackbarHost(hostState = snackBarHostState)
         },
@@ -106,9 +110,6 @@ fun SummariseBuilderScreen(summariseBuilderStatesAndEvents: SummariseBuilderStat
                     ExtendedFloatingActionButton(
                         onClick = {
                             summariseBuilderStatesAndEvents.onSubmitDeclare()
-                            if (summariseBuilderStatesAndEvents.uiState.typeBuilderState.totalTime > 2f) {
-                                //   navigate =true
-                            }
                             showActionOptions = !showActionOptions
                         },
                         containerColor = MaterialTheme.colorScheme.secondaryContainer,
@@ -165,12 +166,11 @@ fun SummariseBuilderScreen(summariseBuilderStatesAndEvents: SummariseBuilderStat
                 LaunchedEffect(snackBarHostState) {
                     summariseBuilderStatesAndEvents.uiState.uiMessage.consumeAsFlow().collect {
                         // snackBarHostState.showSnackbar(it, duration = SnackbarDuration.Long)
-                        navigator?.replaceAll(ObjectItemScreenClass(builderMes = it ))
+                        navigator?.replaceAll(ObjectItemScreenClass(builderMes = it))
                     }
                 }
 
                 MainObjectHeaderItem(
-                    //navigator = navigator,
                     mainObjectHeaderItemData = summariseBuilderStatesAndEvents.uiState.currentSum,
                     onMainObjectClick = {},
                     onTopArchiveButton = { navigator?.push(ObjectItemScreenClass()) },
@@ -190,11 +190,12 @@ fun SummariseBuilderScreen(summariseBuilderStatesAndEvents: SummariseBuilderStat
                             modifier = Modifier.padding(bottom = 8.dp, end = 12.dp)
                         )
                         WheelDatePicker(
-                            rowCount = 2,
-                            selectorProperties = WheelPickerDefaults.selectorProperties(border = null, color = MaterialTheme.colorScheme.background),
-                            size = DpSize(180.dp,80.dp),
-                           // height = 45.dp,
-                            //hideHeader = true,
+                            rowCount = 3,
+                            selectorProperties = WheelPickerDefaults.selectorProperties(
+                                border = null,
+                                color = MaterialTheme.colorScheme.background
+                            ),
+                            size = DpSize(180.dp, 80.dp),
                             onSnappedDate = { summariseBuilderStatesAndEvents.onDate(it.toString()) },
                             modifier = Modifier.padding(start = 15.dp, end = 15.dp)
                         )
@@ -207,8 +208,8 @@ fun SummariseBuilderScreen(summariseBuilderStatesAndEvents: SummariseBuilderStat
                             modifier = Modifier.padding(bottom = 8.dp, end = 48.dp)
                         )
 
-                        OutlinedButton(modifier=Modifier.padding(start = 36.dp)
-                                ,onClick = {showBasePickerDialog=true}){
+                        OutlinedButton(modifier = Modifier.padding(start = 36.dp),
+                            onClick = { showBasePickerDialog = true }) {
                             Text(
                                 style = MaterialTheme.typography.titleLarge,
                                 text = "${summariseBuilderStatesAndEvents.uiState.typeBuilderState.baseWage}$",
@@ -217,315 +218,184 @@ fun SummariseBuilderScreen(summariseBuilderStatesAndEvents: SummariseBuilderStat
                     }
 
                 }
-                /*
-                        Text(
-                            style = MaterialTheme.typography.titleLarge,
-                            text = "Picked Date :"
-                        )
-                        Text(
-                            modifier = Modifier.width(120.dp),
-                            text = "${theState.startTime.date.dayOfMonth}/${theState.startTime.date.month}/${theState.startTime.date.year}"
-                        )
-
-                         */
 
                 Spacer(modifier = Modifier.height(28.dp))
                 Row(
                     modifier.padding(start = 20.dp, end = 25.dp)
                         .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                        Column(modifier = Modifier) {
-                            Text(
-                                style = MaterialTheme.typography.titleLarge,
-                                text = stringResource(Res.string.start_time),
-                                modifier = Modifier.padding(bottom = 4.dp)
-                            )
-                            WheelTimePicker(
-                                rowCount = 1,
-                                selectorProperties = WheelPickerDefaults.selectorProperties(color = MaterialTheme.colorScheme.background,
-                                    border = null), textColor = MaterialTheme.colorScheme.primary,
-                                textStyle = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
-                                size = DpSize(100.dp,80.dp),
-                                onSnappedTime = {
-                                    summariseBuilderStatesAndEvents.onStime(
-                                        it.toString()
-                                    )
-                                },
-                                modifier = Modifier.padding(start = 25.dp)
-                            )
-                        }
-
-                   Icon(Icons.Default.KeyboardDoubleArrowRight,"")
-
-                        Column(modifier = Modifier) {
-                            Text(
-                                style = MaterialTheme.typography.titleLarge,
-                                text = stringResource(Res.string.end_time),
-                                modifier = Modifier.padding(bottom = 4.dp, end = 32.dp)
-                            )
-                            WheelTimePicker(
-                                rowCount = 1,
-                                selectorProperties = WheelPickerDefaults.selectorProperties(color = MaterialTheme.colorScheme.background,
-                                    border = null), textColor = MaterialTheme.colorScheme.primary,
-                                textStyle = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
-                                size = DpSize(100.dp,80.dp),
-                                onSnappedTime = {
-                                    summariseBuilderStatesAndEvents.onEtime(
-                                        it.toString()
-                                    )
-                                },
-                                modifier = Modifier.padding(start = 25.dp)
-                            )
-                        }
-                    }
-
-
-                        /*
+                    Column(modifier = Modifier) {
                         Text(
                             style = MaterialTheme.typography.titleLarge,
-                            text = "Start Time :"
+                            text = stringResource(Res.string.start_time),
+                            modifier = Modifier.padding(bottom = 4.dp)
                         )
-                        Text(
-                            modifier = Modifier.width(120.dp),
-                            text = "${theState.startTime.time.hour} : ${theState.startTime.minute}"
+                        WheelTimePicker(
+                            rowCount = 1,
+                            selectorProperties = WheelPickerDefaults.selectorProperties(
+                                color = MaterialTheme.colorScheme.background,
+                                border = null
+                            ), textColor = MaterialTheme.colorScheme.primary,
+                            textStyle = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
+                            size = DpSize(100.dp, 80.dp),
+                            onSnappedTime = {
+                                summariseBuilderStatesAndEvents.onStime(
+                                    it.toString()
+                                )
+                            },
+                            modifier = Modifier.padding(start = 25.dp)
                         )
                     }
-                    Column(Modifier.clickable { showEndTimeDialog = true }) {
+
+                    Icon(Icons.Default.KeyboardDoubleArrowRight, "")
+
+                    Column(modifier = Modifier) {
                         Text(
                             style = MaterialTheme.typography.titleLarge,
-                            text = "End Time :"
+                            text = stringResource(Res.string.end_time),
+                            modifier = Modifier.padding(bottom = 4.dp, end = 32.dp)
                         )
-                        Text(
-                            modifier = Modifier.width(120.dp),
-                            text = "${theState.endTime.time.hour} : ${theState.endTime.minute}"
+                        WheelTimePicker(
+                            rowCount = 1,
+                            selectorProperties = WheelPickerDefaults.selectorProperties(
+                                color = MaterialTheme.colorScheme.background,
+                                border = null
+                            ), textColor = MaterialTheme.colorScheme.primary,
+                            textStyle = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
+                            size = DpSize(100.dp, 80.dp),
+                            onSnappedTime = {
+                                summariseBuilderStatesAndEvents.onEtime(
+                                    it.toString()
+                                )
+                            },
+                            modifier = Modifier.padding(start = 25.dp)
                         )
                     }
                 }
-                  Spacer(modifier = Modifier.height(28.dp))
-                         */
+                Row(
+                    modifier
+                        .padding(start = 45.dp, end = 45.dp)
+                        .fillMaxWidth(),
+                ) {
+                    Row(
+                        modifier = Modifier.weight(1f),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = stringResource(Res.string.extras),
+                            style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.primary
+                        )
 
-                        Row(
-                            modifier
-                                .padding(start = 45.dp, end = 45.dp)
-                                .fillMaxWidth(),
-                        ) {
-                            Row(
-                                modifier = Modifier.weight(1f),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    text = stringResource(Res.string.extras), style = MaterialTheme.typography.titleLarge,
-                                    color = MaterialTheme.colorScheme.primary
-                                )
-
-                                val a = (theState.extras / 5).toInt() - 1
-                                WheelPicker(
-                                    startIndex = if (a > 0) {
-                                        (a)
-                                    } else {
-                                        0
-                                    },
-                                    count = optionMenu.extraOptions.size,
-                                    rowCount = 3,
-                                    texts = optionMenu.extraOptions,
-                                    contentAlignment = Alignment.Center,
-                                    onScrollFinished = {
-                                        summariseBuilderStatesAndEvents.onExtra((it * 5).toString())
-                                        it
-                                    }
-                                )
+                        val a = (theState.extras / 5).toInt() - 1
+                        WheelPicker(
+                            startIndex = if (a > 0) {
+                                (a)
+                            } else {
+                                0
+                            },
+                            count = optionMenu.extraOptions.size,
+                            rowCount = 3,
+                            texts = optionMenu.extraOptions,
+                            contentAlignment = Alignment.Center,
+                            onScrollFinished = {
+                                summariseBuilderStatesAndEvents.onExtra((it * 5).toString())
+                                it
                             }
-                            Row(
-                                modifier = Modifier.weight(1f),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    text = stringResource(Res.string.deliveries),
-                                    style = MaterialTheme.typography.titleLarge,
-                                    color = MaterialTheme.colorScheme.primary
-                                )
+                        )
+                    }
+                    Row(
+                        modifier = Modifier.weight(1f),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = stringResource(Res.string.deliveries),
+                            style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.primary
+                        )
 
-                                WheelPicker(
-                                    startIndex = if (theState.delivers - 1 > 0) {
-                                        theState.delivers - 1
-                                    } else {
-                                        0
-                                    },
-                                    count = optionMenu.deliversOptions.size,
-                                    rowCount = 3,
-                                    texts = optionMenu.deliversOptions,
-                                    contentAlignment = Alignment.Center,
-                                    onScrollFinished = {
-                                        summariseBuilderStatesAndEvents.onDelivers((it + 1).toString())
-                                        it
-                                    }
-                                )
+                        WheelPicker(
+                            startIndex = if (theState.delivers - 1 > 0) {
+                                theState.delivers - 1
+                            } else {
+                                0
+                            },
+                            count = optionMenu.deliversOptions.size,
+                            rowCount = 3,
+                            texts = optionMenu.deliversOptions,
+                            contentAlignment = Alignment.Center,
+                            onScrollFinished = {
+                                summariseBuilderStatesAndEvents.onDelivers((it + 1).toString())
+                                it
                             }
-
-                        }
-
-                       // Spacer(modifier = Modifier.height(42.dp))
-
-                        Row(
-                            modifier
-                                .padding(start = 45.dp, end = 45.dp)
-                                .fillMaxWidth(), horizontalArrangement = Arrangement.Center
-                        ) {
-
-                            Text(
-                                text = summariseBuilderStatesAndEvents.uiState.errorMes.asString(),
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        }
-
+                        )
                     }
 
-            AnimatedVisibility(showBasePickerDialog){
-                Column (
+                }
+
+                Row(
+                    modifier
+                        .padding(start = 45.dp, end = 45.dp)
+                        .fillMaxWidth(), horizontalArrangement = Arrangement.Center
+                ) {
+
+                    Text(
+                        text = summariseBuilderStatesAndEvents.uiState.errorMes.asString(),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+
+
+            AnimatedVisibility(showBasePickerDialog) {
+                Column(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    Column (
-                        Modifier.clip(MaterialTheme.shapes.extraLarge).fillMaxWidth(0.7f).width(200.dp)
-                            .background(MaterialTheme.colorScheme.secondaryContainer))
+                    Column(
+                        Modifier.clip(MaterialTheme.shapes.extraLarge).fillMaxWidth(0.7f)
+                            .width(200.dp)
+                            .background(MaterialTheme.colorScheme.secondaryContainer)
+                    )
                     {
-                        Row(modifier = Modifier.fillMaxWidth().padding(16.dp),horizontalArrangement = Arrangement.SpaceBetween) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(16.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
                             Text(
-                                text = stringResource(Res.string.extras), style = MaterialTheme.typography.titleLarge,
+                                text = stringResource(Res.string.extras),
+                                style = MaterialTheme.typography.titleLarge,
                                 color = MaterialTheme.colorScheme.primary,
 
+                                )
+
+                            Icon(Icons.Default.Check, "",
+                                modifier = Modifier.clickable { showBasePickerDialog = false }
+                                    .size(42.dp), tint = MaterialTheme.colorScheme.primary
                             )
 
-                            Icon(Icons.Default.Check,"",
-                                modifier=Modifier.clickable {showBasePickerDialog=false}.size(42.dp), tint = MaterialTheme.colorScheme.primary)
-
                         }
-                        val a =summariseBuilderStatesAndEvents.uiState.typeBuilderState.baseWage
-                    WheelPicker(
-                        startIndex = if(a>0){a}else{1},
-                        count = optionMenu.deliversOptions.size,
-                        rowCount = 3,
-                        texts = optionMenu.deliversOptions,
-                        contentAlignment = Alignment.Center,
-                        onScrollFinished = {
-                            summariseBuilderStatesAndEvents.onBaseWage((it+1).toString())
-                            it
-                        }
-                    )
+                        val a = summariseBuilderStatesAndEvents.uiState.typeBuilderState.baseWage
+                        WheelPicker(
+                            startIndex = if (a > 0) {
+                                a
+                            } else {
+                                1
+                            },
+                            count = optionMenu.deliversOptions.size,
+                            rowCount = 3,
+                            texts = optionMenu.deliversOptions,
+                            contentAlignment = Alignment.Center,
+                            onScrollFinished = {
+                                summariseBuilderStatesAndEvents.onBaseWage((it + 1).toString())
+                                it
+                            }
+                        )
+                    }
                 }
-            }
             }
         }
-/*
-                    AnimatedVisibility(visible = showStartTimeDialog) {
-                        Column(
-                            modifier = Modifier.fillMaxSize(),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Column(
-                                modifier = Modifier
-                                    .clip(MaterialTheme.shapes.extraLarge)
-                                    .fillMaxWidth(0.8f)
-
-                            ) {
-
-                                WheelTimePickerDialog(
-                                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                                    showTimePicker = showStartTimeDialog,
-                                    title = "Start time picker",
-                                    doneLabel = "Done",
-                                    titleStyle = MaterialTheme.typography.titleLarge,
-                                    doneLabelStyle = MaterialTheme.typography.titleMedium,
-                                    startTime = theState.startTime.time,
-                                    minTime = LocalTime(0, 0),
-                                    maxTime = LocalTime(23, 59),
-                                    onDoneClick = {
-                                        showStartTimeDialog = false
-                                        summariseBuilderStatesAndEvents.onStime(it.toString())
-                                    },
-                                    height = 120.dp
-                                )
-                            }
-                        }
-                    }
-                    AnimatedVisibility(visible = showEndTimeDialog) {
-                        Column(
-                            modifier = Modifier.fillMaxSize(),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Column(
-                                modifier = Modifier
-                                    .clip(MaterialTheme.shapes.extraLarge)
-                                    .fillMaxWidth(0.8f)
-
-                            ) {
-
-                                WheelTimePickerDialog(
-                                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                                    showTimePicker = showEndTimeDialog,
-                                    title = "End time picker",
-                                    doneLabel = "Done",
-                                    titleStyle = MaterialTheme.typography.titleLarge,
-                                    doneLabelStyle = MaterialTheme.typography.titleMedium,
-                                    startTime = theState.endTime.time,
-                                    minTime = LocalTime(0, 0),
-                                    maxTime = LocalTime(23, 59),
-                                    onDoneClick = {
-                                        showEndTimeDialog = false
-                                        summariseBuilderStatesAndEvents.onEtime(it.toString())
-                                    },
-                                    height = 120.dp
-                                )
-                            }
-                        }
-                    }
-                    AnimatedVisibility(visible = showDateDialog) {
-                        Column(
-                            modifier = Modifier.fillMaxSize(),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Column(
-                                modifier = Modifier
-                                    .clip(MaterialTheme.shapes.extraLarge)
-                                    .fillMaxWidth(0.8f)
-                                    .background(MaterialTheme.colorScheme.secondaryContainer),
-
-                                ) {
-
-                                val currentDate =
-                                    Clock.System.now().toLocalDateTime(TimeZone.UTC).date
-                                WheelDatePicker(
-                                    title = "Declare Date",
-                                    doneLabel = "Done",
-                                    titleStyle = MaterialTheme.typography.titleLarge,
-                                    doneLabelStyle = MaterialTheme.typography.titleMedium,
-                                    startDate = theState.startTime.date,
-                                    minDate = LocalDate(
-                                        year = 2020,
-                                        month = Month.FEBRUARY,
-                                        dayOfMonth = 1
-                                    ),
-                                    height = 70.dp,
-                                    maxDate = currentDate,
-                                    dateTextStyle = MaterialTheme.typography.titleMedium,
-                                    dateTextColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                                    onDoneClick = {
-                                        showDateDialog = false
-                                        summariseBuilderStatesAndEvents.onDate(it.toString())
-                                    }
-                                )
-                            }
-                        }
-                    }
-
- */
-
-                }
-            }
-
-
+    }
+}

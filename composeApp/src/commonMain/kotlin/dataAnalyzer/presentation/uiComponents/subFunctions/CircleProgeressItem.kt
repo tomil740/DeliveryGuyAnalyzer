@@ -28,6 +28,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import dataAnalyzer.presentation.uiComponents.CircleValues
+import dataAnalyzer.presentation.util.Dimnations
 
 
 @Composable
@@ -151,14 +152,15 @@ fun CircleProgressItem(
                 }
             }
         }
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(Dimnations.Spacer.medium))
 
         Row(Modifier) {
 
             Text(
                 text = valueHeader,
-                style = MaterialTheme.typography.titleLarge,
-                color = textColor
+                style = MaterialTheme.typography.titleSmall,
+                color = textColor,
+                maxLines = 1
             )
 
         }

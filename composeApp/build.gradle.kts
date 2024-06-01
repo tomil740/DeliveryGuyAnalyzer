@@ -1,4 +1,5 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.utils.loadPropertyFromResources
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -7,11 +8,8 @@ plugins {
     alias(libs.plugins.realm.plugin)
 }
 
-
 kotlin {
     task("testClasses")
-
-
 
     androidTarget {
         compilations.all {

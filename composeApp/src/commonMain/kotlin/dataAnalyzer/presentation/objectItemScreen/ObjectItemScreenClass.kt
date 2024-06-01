@@ -6,11 +6,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
-import dataAnalyzer.domain.models.models.SumObjectInterface
+import dataAnalyzer.domain.models.models.SumObjDomain
 import dataAnalyzer.presentation.util.UiText
 
-
-class ObjectItemScreenClass(private val initializeObj: SumObjectInterface? = null,private val builderMes:UiText? = null):Screen {
+/*
+ObjectItemScreenClass :
+An voygar navigation class demand , this class perpus is to connect between screen and initialize it with our dependency injection
+ */
+class ObjectItemScreenClass(private val initializeObj: SumObjDomain? = null, private val builderMes:UiText? = null):Screen {
 
     @Composable
     override fun Content() {

@@ -1,0 +1,31 @@
+
+<resources>
+    <string name="total_income_prefix">הכנסה כוללת : </string>
+    <string name="total_time_prefix">זמן כולל : </string>
+    <string name="base_prefix">* בסיס : %1$s</string>
+    <string name="extra_prefix">* טיפים : %1$s</string>
+    <string name="All_time_but">מכל הזמנים</string>
+    <string name="month_data_but">חודש נוכחי</string>
+    <string name="per_delivery">ממוצע למשלוח</string>
+    <string name="per_hour">ממוצע לשעה</string>
+    <string name="per_session">ממוצע למשמרת</string>
+    <string name="start_time_prefix">זמן התחלה :</string>
+    <string name="end_time_prefix">זמן סיום :</string>
+    <string name="total_deliveries_prefix">סך הכל משלוחים :</string>
+    //builder resources
+    <string name="picked_date">תאריך נבחר :</string>
+    <string name="base_hour">שכר בסיס :</string>
+    <string name="start_time">זמן התחלה :</string>
+    <string name="end_time">זמן סיום :</string>
+    <string name="extras">טיפים :</string>
+    <string name="deliveries">משלוחים :</string>
+    <string name="submit">הוספה</string>
+    <string name="delete">מחיקה</string>
+    //messages and notes
+    <string name="success_insert_mes">הדיווח מ%1$s נוסף בהצלחה </string>
+    <string name="fail_time_insert_mes">"Fail to insert because your declare is to shor in %1$s,your work declare must be in minimum of 2 hours long in order to be insert"</string>
+    <string name="fail_overlap_insert_mes">the new declare of %1$s has been fail to insert because of an overlap with other work declare please check the date and time  ,try again (the builder data will be saved...)</string>
+
+
+
+</resources>

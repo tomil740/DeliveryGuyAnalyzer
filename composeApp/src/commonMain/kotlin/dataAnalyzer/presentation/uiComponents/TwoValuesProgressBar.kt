@@ -30,21 +30,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import dataAnalyzer.domain.models.util.closeTypesCollections.SumObjectsType
-import dataAnalyzer.presentation.util.DefaultData
 import dataAnalyzer.presentation.uiComponents.subFunctions.ExpandedDataItem
 import dataAnalyzer.presentation.uiComponents.subFunctions.ProgressBar
+import dataAnalyzer.presentation.util.DefaultData
+import dataAnalyzer.presentation.util.Dimnations
 import deliveryguyanalyzer.composeapp.generated.resources.Res
 import deliveryguyanalyzer.composeapp.generated.resources.base_prefix
 import deliveryguyanalyzer.composeapp.generated.resources.extra_prefix
-import deliveryguyanalyzer.composeapp.generated.resources.income_prefix
 import deliveryguyanalyzer.composeapp.generated.resources.total_income_prefix
 import deliveryguyanalyzer.composeapp.generated.resources.total_time_prefix
 import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.Resource
-import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
 
@@ -83,7 +80,6 @@ fun TwoValuesProgressBar(barValComponent1:Float, barValComponent2:Float, sumObjT
         DefaultData().getSecondaryColors()}else{
         DefaultData().getMainColors()}
 
-    //Todo need to be define on matched resource file
     val constList = listOf(stringResource(Res.string.total_income_prefix),stringResource(Res.string.total_time_prefix))
 
     //the data local state holders , in order of switching between data on demand
@@ -187,22 +183,8 @@ fun TwoValuesProgressBar(barValComponent1:Float, barValComponent2:Float, sumObjT
                     onItemClick = { isDefaultBar = !isDefaultBar }
 
                 )
-/*
-the full comparable data header
-                UnitDisplay(
-                    amount =  (((subSize*100f).toInt()).toFloat()/100f),
-                    unitIcon = Icons.Filled.Build,
-                    amountColor = MaterialTheme.colorScheme.onPrimary,
-                    amountTextStyle = MaterialTheme.typography.titleMedium,
-                    unitColor = MaterialTheme.colorScheme.onPrimary,
-                    isMainObj = false,
-                    onItemClick = { isDefaultBar = !isDefaultBar }
-
-                )
-
- */
             }
-            Spacer(modifier = Modifier.height(6.dp))
+            Spacer(modifier = Modifier.height(Dimnations.Spacer.small))
 
             /*
             here we will mange the two components bar switched states
@@ -253,7 +235,7 @@ the full comparable data header
                             color = colors.valueColor
                         )
 
-                        Spacer(Modifier.width(12.dp))
+                        Spacer(Modifier.width(Dimnations.Spacer.small))
 
                         Text(
                             stringResource(Res.string.extra_prefix,barValComponent2.toInt()),
@@ -294,7 +276,7 @@ the full comparable data header
                     imageVector = Icons.Default.ArrowDropDown,
                     contentDescription = null,
                     modifier = Modifier
-                        .size(42.dp),
+                        .size(Dimnations.IconSize.large),
                     tint = MaterialTheme.colorScheme.onPrimary
                 )
             }
