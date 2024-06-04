@@ -123,7 +123,7 @@ the scaffold function includes the actual UI itself , according to the matched c
                 modifier = Modifier
                     //todo need to test the use of offset in different hardware (can cause some problems)
                     .offset(y = -20.dp)
-                    .size(58.dp),
+                    .size(Dimnations.ActionBut.medium),
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary
             ) {

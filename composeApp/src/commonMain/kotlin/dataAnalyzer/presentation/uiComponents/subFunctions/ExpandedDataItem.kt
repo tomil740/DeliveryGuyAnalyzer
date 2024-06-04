@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import dataAnalyzer.domain.models.util.closeTypesCollections.SumObjectsType
 import dataAnalyzer.presentation.util.DefaultData
+import dataAnalyzer.presentation.util.Dimnations
 import deliveryguyanalyzer.composeapp.generated.resources.Res
 import deliveryguyanalyzer.composeapp.generated.resources.base_prefix
 import deliveryguyanalyzer.composeapp.generated.resources.per_delivery
@@ -33,6 +34,11 @@ import deliveryguyanalyzer.composeapp.generated.resources.per_session
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 
+/*
+ExpandedDataItem :
+arguments : get between two - three attributes values to present with matched colors picks , and two basic states
+that defined which version of this function we want to implement
+ */
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ExpandedDataItem(isExpended:Boolean, isDefaultParam:Boolean=true,
@@ -42,12 +48,17 @@ fun ExpandedDataItem(isExpended:Boolean, isDefaultParam:Boolean=true,
                      barColor: Color = MaterialTheme.colorScheme.onSecondaryContainer,
                      valueColor: Color = MaterialTheme.colorScheme.secondaryContainer,
                      textColor:Color =MaterialTheme.colorScheme.onPrimary,) {
-
+/*an declaration of of our three attributes comparable data according to the matched value data and the calculating function
+* those states target is to prevent recalling the calculation where nothing related to it is changing
+ */
     var perHourComparable by remember { mutableStateOf(DefaultData().getComparablePerHour(perHourValue1))}
     var perDeliveryComparable by remember { mutableStateOf(DefaultData().getComparablePerDelivery(perDeliveryValue1))}
     var perSessionComparable by remember { mutableStateOf(DefaultData().getComparableMainValue(SumObjectsType.WorkSession,perHourValue1))}
 
+    //declare an local state for the switchable object state
+    var isDefault by remember { mutableStateOf(isDefaultParam) }
 
+//three coroutine to update the states in a case of related value changing
     LaunchedEffect(key1 = perDeliveryValue1 ,key2 = perDeliveryValue2) {
         perDeliveryComparable = DefaultData().getComparablePerDelivery(perDeliveryValue1+perDeliveryValue2)
     }
@@ -58,13 +69,12 @@ fun ExpandedDataItem(isExpended:Boolean, isDefaultParam:Boolean=true,
         perSessionComparable = DefaultData().getComparableMainValue(SumObjectsType.WorkSession,(perSessionValue1+perSessionValue2))
     }
 
-        var isDefault by remember { mutableStateOf(isDefaultParam) }
 
+    //an state that is pass as argument to define rather expose or not our UI
     AnimatedVisibility(isExpended) {
-
-
+        //the UI layout , box in order to positioned object on top each other in need
         Box(modifier = Modifier.height(200.dp).clickable { isDefault=!isDefault }){
-
+            //the different data switch , will be enable according to the flag (if there is mauched data...)
             AnimatedContent(targetState = if(perSessionValue1!=0f){isDefault }else{false},
                 transitionSpec = {
                     fadeIn(
@@ -73,7 +83,7 @@ fun ExpandedDataItem(isExpended:Boolean, isDefaultParam:Boolean=true,
                 },) { targetState ->
                 when (targetState) {
                     true -> {
-                        Row(Modifier.padding(16.dp)) {
+                        Row(Modifier.padding(Dimnations.Padding.large)) {
                             CircleProgressItem(
                                 valueHeader = stringResource(Res.string.per_session),
                                 barSize = perSessionComparable.theVal,
@@ -89,7 +99,7 @@ fun ExpandedDataItem(isExpended:Boolean, isDefaultParam:Boolean=true,
 
                     false -> {
 
-                        Row(Modifier.padding(16.dp)) {
+                        Row(Modifier.padding(Dimnations.Padding.large)) {
                             CircleProgressItem(
                                 valueHeader = stringResource(Res.string.per_delivery),
                                 barSize = perDeliveryComparable.theVal,
@@ -102,7 +112,7 @@ fun ExpandedDataItem(isExpended:Boolean, isDefaultParam:Boolean=true,
                                     .weight(1f)
                             )
 
-                            Spacer(modifier = Modifier.width(32.dp))
+                            Spacer(modifier = Modifier.width(Dimnations.Spacer.huge))
 
                             CircleProgressItem(
                                 valueHeader = stringResource(Res.string.per_hour),

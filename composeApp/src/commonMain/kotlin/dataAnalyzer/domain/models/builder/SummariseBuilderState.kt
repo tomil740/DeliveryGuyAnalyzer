@@ -3,6 +3,7 @@ package dataAnalyzer.domain.models.builder
 import dataAnalyzer.domain.models.models.SumObjDomain
 import dataAnalyzer.domain.models.util.closeTypesCollections.SumObjectsType
 import dataAnalyzer.domain.models.util.helperFun.getTimeDifferent
+import dataAnalyzer.presentation.util.toPresent
 import kotlinx.datetime.LocalDateTime
 
 
@@ -20,48 +21,12 @@ data class SummariseBuilderState(
     val extras : Float,
     val delivers : Int,
 ) {
-   /*
-    fun toWorkDeclareDto(): WorkDeclareData {
-      return  WorkDeclareData().apply {
-            sTime = startTime.toString()
-            eTime = endTime.toString()
-            baseIncome = (baseWage*totalTime)
-            extraIncome = extras
-            time = totalTime
-            deliveries = delivers
-            yearAndMonth = "${startTime.year}${startTime.month.number}"
-            dayOfMonth = startTime.dayOfMonth
-        }
-    }
-
-    */
-/*
-todo need to make shure this is not useable at all
-I think that was used in some tenetive soulotion to use this data before I adjust (or delete for MVP) use the matched functions
-
-    fun toLiveBuilderState():LiveBuilderState{
-        return LiveBuilderState(
-            startTime =startTime,
-            endTime =endTime,
-            totalTime=totalTime,
-            baseWage =baseWage.toFloat(),
-            totalBase =totalBase,
-            extras = extras,
-            delivers =delivers,
-            deliversItem= listOf()
-        )
-    }
-
- */
-
-    /*
-    this map our stright data from the user into the matched presentable object to the UI functions
-     */
     fun toSumObjDomain(): SumObjDomain {
         val theTime = getTimeDifferent(startTime = startTime.time, endTime = endTime.time)
         val baseIncome = baseWage * theTime
 
         return SumObjDomain(
+            objectName = "BL${startTime.date.dayOfMonth}/${startTime.date.month.toPresent()}",
             startTime = startTime,
             endTime = endTime,
             totalTime = theTime,

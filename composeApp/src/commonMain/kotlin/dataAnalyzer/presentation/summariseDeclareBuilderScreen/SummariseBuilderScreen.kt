@@ -16,20 +16,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.KeyboardDoubleArrowRight
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SmallFloatingActionButton
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -42,7 +41,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -50,6 +48,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import dataAnalyzer.presentation.core.getOptionsMenu
 import dataAnalyzer.presentation.objectItemScreen.ObjectItemScreenClass
 import dataAnalyzer.presentation.uiComponents.MainObjectHeaderItem
+import dataAnalyzer.presentation.util.Dimnations
 import deliveryguyanalyzer.composeapp.generated.resources.Res
 import deliveryguyanalyzer.composeapp.generated.resources.base_hour
 import deliveryguyanalyzer.composeapp.generated.resources.delete
@@ -60,17 +59,18 @@ import deliveryguyanalyzer.composeapp.generated.resources.picked_date
 import deliveryguyanalyzer.composeapp.generated.resources.start_time
 import deliveryguyanalyzer.composeapp.generated.resources.submit
 import dev.darkokoa.datetimewheelpicker.WheelDatePicker
-import kotlinx.coroutines.flow.consumeAsFlow
-import network.chaintech.ui.datepicker.WheelPicker
 import dev.darkokoa.datetimewheelpicker.WheelTimePicker
 import dev.darkokoa.datetimewheelpicker.core.WheelPickerDefaults
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.consumeAsFlow
+import network.chaintech.ui.datepicker.WheelPicker
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
-import kotlin.math.round
 
-
+/*
+SummariseBuilderScreen :
+the Ui top function of this screen
+* arguments : the screen state and events class according to the clean architecture , and general modifier
+ */
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun SummariseBuilderScreen(summariseBuilderStatesAndEvents: SummariseBuilderStatesAndEvents, modifier: Modifier) {
@@ -85,26 +85,27 @@ fun SummariseBuilderScreen(summariseBuilderStatesAndEvents: SummariseBuilderStat
     val snackBarHostState = remember { SnackbarHostState() }
     var showActionOptions by remember { mutableStateOf(false) }
     var showBasePickerDialog by remember { mutableStateOf(false) }
+    var theModifier by remember { mutableStateOf(modifier.fillMaxSize()) }
 
-    //reference to an constent values for our options menu , saves as a state to avoid repulling on every recompositon
-    var optionMenu by remember { mutableStateOf(getOptionsMenu()) }
+    //reference to an fixed values for our options menu , saves as a state to avoid repulling on every recompositon
+    val optionMenu by remember { mutableStateOf(getOptionsMenu()) }
 
-
-    //for live presentation of the state
-    //todo need to delete this , as for now I dont understand why would I implement this...
-  //  var startTimeState by remember { mutableStateOf("${theState.startTime.hour}:${theState.startTime.minute}") }
-    //var endTimeState by remember { mutableStateOf("${theState.endTime.hour}:${theState.endTime.minute}")
-   // LaunchedEffect(theState) {
-       // startTimeState = "${theState.startTime.hour}:${theState.startTime.minute}"
-      //  endTimeState = "${theState.endTime.hour}:${theState.endTime.minute}"
- //   }
+//an helper coroutine to enable and unable the click general click to close our action button menu
+    LaunchedEffect(showActionOptions) {
+        theModifier = if (showActionOptions) {
+              modifier.fillMaxSize().clickable { showActionOptions = !showActionOptions }
+        } else {
+            modifier.fillMaxSize()
+        }
+    }
 
     Scaffold(
-        modifier = modifier.fillMaxSize(),
+        modifier = theModifier,
         snackbarHost = {
             SnackbarHost(hostState = snackBarHostState)
         },
         floatingActionButton = {
+            //todo change the animation to something nicer
             AnimatedVisibility(showActionOptions) {
                 Column(modifier = Modifier.offset(x = -35.dp, y = -20.dp)) {
                     ExtendedFloatingActionButton(
@@ -118,14 +119,14 @@ fun SummariseBuilderScreen(summariseBuilderStatesAndEvents: SummariseBuilderStat
                         Icon(
                             Icons.Filled.Check,
                             "Small floating action button.",
-                            modifier = Modifier.size(32.dp)
+                            modifier = Modifier.size(Dimnations.IconSize.medium)
                         )
 
                         Text(text = stringResource(Res.string.submit))
 
                     }
 
-                    Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(Dimnations.Spacer.small))
 
                     ExtendedFloatingActionButton(
                         onClick = {
@@ -137,7 +138,7 @@ fun SummariseBuilderScreen(summariseBuilderStatesAndEvents: SummariseBuilderStat
                         Icon(
                             Icons.Filled.Clear,
                             "Small floating action button.",
-                            modifier = Modifier.size(32.dp)
+                            modifier = Modifier.size(Dimnations.IconSize.medium)
                         )
 
                         Text(text = stringResource(Res.string.delete))
@@ -149,7 +150,7 @@ fun SummariseBuilderScreen(summariseBuilderStatesAndEvents: SummariseBuilderStat
                 SmallFloatingActionButton(
                     onClick = { showActionOptions = !showActionOptions },
                     modifier = Modifier
-                        .size(54.dp),
+                        .size(Dimnations.ActionBut.medium),
                     containerColor = MaterialTheme.colorScheme.secondaryContainer,
                     contentColor = MaterialTheme.colorScheme.onSecondaryContainer
                 ) {
@@ -158,18 +159,29 @@ fun SummariseBuilderScreen(summariseBuilderStatesAndEvents: SummariseBuilderStat
             }
         }
     ) { paddingVal ->
-
+        /*this box will rap around our all screen UI (without the scaffold padding), in order of implementing
+        different elements on top of the current UI
+         */
         Box(modifier = Modifier.padding(paddingVal), contentAlignment = Alignment.TopEnd) {
-
+            /*this column will return us the column scope that inside the box , and will maintain basic
+              vertical scroll state in some specific states
+             */
             Column(modifier.verticalScroll(rememberScrollState()).padding(paddingVal)) {
-
-                LaunchedEffect(snackBarHostState) {
+                //an launchedEffect coroutine that will collect any UI message to be presented
+                LaunchedEffect(summariseBuilderStatesAndEvents.uiState.uiMessage) {
                     summariseBuilderStatesAndEvents.uiState.uiMessage.consumeAsFlow().collect {
-                        // snackBarHostState.showSnackbar(it, duration = SnackbarDuration.Long)
+                        snackBarHostState.showSnackbar(it.asString2(), duration = SnackbarDuration.Long)
+                    }
+                }
+                //an launchedEffect coroutine that will collect any navigate message, then will navigate with it
+                LaunchedEffect(summariseBuilderStatesAndEvents.uiState.navigateMessage) {
+                    summariseBuilderStatesAndEvents.uiState.navigateMessage.consumeAsFlow().collect {
                         navigator?.replaceAll(ObjectItemScreenClass(builderMes = it))
                     }
                 }
-
+                /*UI function that represent our summarise object , this function has couple of override options according
+                 to what we will send as parameter to it
+                 */
                 MainObjectHeaderItem(
                     mainObjectHeaderItemData = summariseBuilderStatesAndEvents.uiState.currentSum,
                     onMainObjectClick = {},
@@ -177,7 +189,7 @@ fun SummariseBuilderScreen(summariseBuilderStatesAndEvents: SummariseBuilderStat
                     modifier = modifier
                 )
 
-                Spacer(modifier = Modifier.height(36.dp))
+                Spacer(modifier = Modifier.height(Dimnations.Spacer.huge))
 
                 Row(
                     modifier
@@ -187,7 +199,7 @@ fun SummariseBuilderScreen(summariseBuilderStatesAndEvents: SummariseBuilderStat
                         Text(
                             style = MaterialTheme.typography.titleLarge,
                             text = stringResource(Res.string.picked_date),
-                            modifier = Modifier.padding(bottom = 8.dp, end = 12.dp)
+                            modifier = Modifier.padding(bottom = Dimnations.Padding.small, end = Dimnations.Padding.medium)
                         )
                         WheelDatePicker(
                             rowCount = 3,
@@ -197,7 +209,7 @@ fun SummariseBuilderScreen(summariseBuilderStatesAndEvents: SummariseBuilderStat
                             ),
                             size = DpSize(180.dp, 80.dp),
                             onSnappedDate = { summariseBuilderStatesAndEvents.onDate(it.toString()) },
-                            modifier = Modifier.padding(start = 15.dp, end = 15.dp)
+                            modifier = Modifier.padding(start = Dimnations.Padding.large, end = Dimnations.Padding.large)
                         )
                     }
 
@@ -205,10 +217,10 @@ fun SummariseBuilderScreen(summariseBuilderStatesAndEvents: SummariseBuilderStat
                         Text(
                             style = MaterialTheme.typography.titleLarge,
                             text = stringResource(Res.string.base_hour),
-                            modifier = Modifier.padding(bottom = 8.dp, end = 48.dp)
+                            modifier = Modifier.padding(bottom = Dimnations.Padding.medium, end = Dimnations.BigPaddings.large)
                         )
 
-                        OutlinedButton(modifier = Modifier.padding(start = 36.dp),
+                        OutlinedButton(modifier = Modifier.padding(start = Dimnations.BigPaddings.small),
                             onClick = { showBasePickerDialog = true }) {
                             Text(
                                 style = MaterialTheme.typography.titleLarge,
@@ -219,16 +231,16 @@ fun SummariseBuilderScreen(summariseBuilderStatesAndEvents: SummariseBuilderStat
 
                 }
 
-                Spacer(modifier = Modifier.height(28.dp))
+                Spacer(modifier = Modifier.height(Dimnations.Spacer.large))
                 Row(
-                    modifier.padding(start = 20.dp, end = 25.dp)
+                    modifier.padding(start = Dimnations.Padding.huge, end = Dimnations.BigPaddings.small)
                         .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Column(modifier = Modifier) {
                         Text(
                             style = MaterialTheme.typography.titleLarge,
                             text = stringResource(Res.string.start_time),
-                            modifier = Modifier.padding(bottom = 4.dp)
+                            modifier = Modifier.padding(bottom = Dimnations.Padding.small)
                         )
                         WheelTimePicker(
                             rowCount = 1,
@@ -239,11 +251,11 @@ fun SummariseBuilderScreen(summariseBuilderStatesAndEvents: SummariseBuilderStat
                             textStyle = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
                             size = DpSize(100.dp, 80.dp),
                             onSnappedTime = {
-                                summariseBuilderStatesAndEvents.onStime(
+                                summariseBuilderStatesAndEvents.onSTime(
                                     it.toString()
                                 )
                             },
-                            modifier = Modifier.padding(start = 25.dp)
+                            modifier = Modifier.padding(start = Dimnations.BigPaddings.tiny)
                         )
                     }
 
@@ -253,7 +265,7 @@ fun SummariseBuilderScreen(summariseBuilderStatesAndEvents: SummariseBuilderStat
                         Text(
                             style = MaterialTheme.typography.titleLarge,
                             text = stringResource(Res.string.end_time),
-                            modifier = Modifier.padding(bottom = 4.dp, end = 32.dp)
+                            modifier = Modifier.padding(bottom = Dimnations.Padding.tiny, end = Dimnations.BigPaddings.small)
                         )
                         WheelTimePicker(
                             rowCount = 1,
@@ -264,17 +276,17 @@ fun SummariseBuilderScreen(summariseBuilderStatesAndEvents: SummariseBuilderStat
                             textStyle = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
                             size = DpSize(100.dp, 80.dp),
                             onSnappedTime = {
-                                summariseBuilderStatesAndEvents.onEtime(
+                                summariseBuilderStatesAndEvents.onETime(
                                     it.toString()
                                 )
                             },
-                            modifier = Modifier.padding(start = 25.dp)
+                            modifier = Modifier.padding(start = Dimnations.BigPaddings.tiny)
                         )
                     }
                 }
                 Row(
                     modifier
-                        .padding(start = 45.dp, end = 45.dp)
+                        .padding(start = Dimnations.BigPaddings.medium, end = Dimnations.BigPaddings.medium)
                         .fillMaxWidth(),
                 ) {
                     Row(
@@ -335,7 +347,7 @@ fun SummariseBuilderScreen(summariseBuilderStatesAndEvents: SummariseBuilderStat
 
                 Row(
                     modifier
-                        .padding(start = 45.dp, end = 45.dp)
+                        .padding(start = Dimnations.BigPaddings.medium, end = Dimnations.BigPaddings.medium)
                         .fillMaxWidth(), horizontalArrangement = Arrangement.Center
                 ) {
 
@@ -361,7 +373,7 @@ fun SummariseBuilderScreen(summariseBuilderStatesAndEvents: SummariseBuilderStat
                     )
                     {
                         Row(
-                            modifier = Modifier.fillMaxWidth().padding(16.dp),
+                            modifier = Modifier.fillMaxWidth().padding(Dimnations.Padding.large),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
@@ -373,7 +385,7 @@ fun SummariseBuilderScreen(summariseBuilderStatesAndEvents: SummariseBuilderStat
 
                             Icon(Icons.Default.Check, "",
                                 modifier = Modifier.clickable { showBasePickerDialog = false }
-                                    .size(42.dp), tint = MaterialTheme.colorScheme.primary
+                                    .size(Dimnations.IconSize.large), tint = MaterialTheme.colorScheme.primary
                             )
 
                         }

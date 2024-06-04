@@ -17,5 +17,7 @@ interface Repository {
     fun getMonthWorkDeclare(yearMonth:String):List<WorkSum>
 
     fun getDeclareByDayOfMonthPlusYearAndMonth(dayOfMonth: Int, yearAndMonth: String):List<WorkSum>
+    fun getBaseWage():Int
+    suspend fun updateBaseWage(baseWage:Int)
 
 }

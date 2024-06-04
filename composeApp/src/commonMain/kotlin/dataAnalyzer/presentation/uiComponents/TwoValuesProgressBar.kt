@@ -73,7 +73,7 @@ fun TwoValuesProgressBar(barValComponent1:Float, barValComponent2:Float, sumObjT
 
     //local states to mange our interactive components
     var isDefaultBar by remember { mutableStateOf(true) }
-    var isExpandet by remember { mutableStateOf(false) }
+    var isExpanded by remember { mutableStateOf(false) }
 
     //the color set according to the function argument ...
     val colors = if(isSecondary){
@@ -134,6 +134,7 @@ fun TwoValuesProgressBar(barValComponent1:Float, barValComponent2:Float, sumObjT
 
         Column(modifier = Modifier
             .fillMaxWidth()
+            //todo an offSet to solve
             .offset(y = -16.dp)
             .onGloballyPositioned {
                 itemSize = with(density) {
@@ -143,7 +144,7 @@ fun TwoValuesProgressBar(barValComponent1:Float, barValComponent2:Float, sumObjT
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 8.dp, end = 8.dp),
+                    .padding(start =Dimnations.Padding.small, end = Dimnations.Padding.small),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 //as for now I pass this behaviour to the unit display , at future probably will nav to the specific value analytics
@@ -162,13 +163,13 @@ fun TwoValuesProgressBar(barValComponent1:Float, barValComponent2:Float, sumObjT
 
             }
 
-            Spacer(modifier = Modifier.height(2.dp))
+            Spacer(modifier = Modifier.height(Dimnations.Spacer.tiny))
 
 
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 42.dp, end = 42.dp),
+                    .padding(start = Dimnations.BigPaddings.large, end = Dimnations.BigPaddings.large),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 UnitDisplay(
@@ -197,7 +198,7 @@ fun TwoValuesProgressBar(barValComponent1:Float, barValComponent2:Float, sumObjT
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(30.dp)
-                            .padding(start = 4.dp, end = 4.dp),
+                            .padding(start = Dimnations.Padding.tiny, end = Dimnations.Padding.tiny),
                     valueColor = colors.valueColor,
                     barColor = colors.barColor,
                     value2Color = colors.value2Color,
@@ -214,7 +215,7 @@ fun TwoValuesProgressBar(barValComponent1:Float, barValComponent2:Float, sumObjT
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(30.dp)
-                        .padding(start = 4.dp, end = 4.dp),
+                        .padding(start = Dimnations.Padding.tiny, end = Dimnations.Padding.tiny),
                     valueColor = colors.valueColor,
                     barColor = colors.barColor,
                     value2Color = colors.value2Color,
@@ -227,7 +228,7 @@ fun TwoValuesProgressBar(barValComponent1:Float, barValComponent2:Float, sumObjT
             Row (modifier=Modifier.fillMaxWidth(), horizontalArrangement =if(isDefaultBar){Arrangement.SpaceBetween}else{Arrangement.End}) {
                 AnimatedVisibility(isDefaultBar) {
                     Row {
-                        Spacer(Modifier.width(3.dp))
+                        Spacer(Modifier.width(Dimnations.Spacer.tiny))
 
                         Text(
                             stringResource(Res.string.base_prefix,barValComponent1.toInt()),
@@ -256,7 +257,7 @@ fun TwoValuesProgressBar(barValComponent1:Float, barValComponent2:Float, sumObjT
                 )
             }
 
-            ExpandedDataItem(if (stayExpended){true}else{isExpandet},isDefaultParam =false,
+            ExpandedDataItem(if (stayExpended){true}else{isExpanded},isDefaultParam =false,
                 perDeliveryValue1 = perDeliveryValue1,perDeliveryValue2=perDeliveryValue2,
                 perHourValue1 = perHourValue1, perHourValue2 = perHourValue2,
                 perSessionValue1 = perSessionValue1, perSessionValue2 = perSessionValue2,
@@ -271,7 +272,7 @@ fun TwoValuesProgressBar(barValComponent1:Float, barValComponent2:Float, sumObjT
             contentAlignment = Alignment.BottomCenter
         ) {
 
-            IconButton(onClick = { isExpandet = !isExpandet }) {
+            IconButton(onClick = { isExpanded = !isExpanded }) {
                 Icon(
                     imageVector = Icons.Default.ArrowDropDown,
                     contentDescription = null,

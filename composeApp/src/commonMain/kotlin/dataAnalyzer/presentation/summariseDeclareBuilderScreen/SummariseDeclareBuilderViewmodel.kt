@@ -1,5 +1,7 @@
 package dataAnalyzer.presentation.summariseDeclareBuilderScreen
 
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.ProgressIndicatorDefaults
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import dataAnalyzer.domain.models.builder.SummariseBuilderFieldsState
@@ -37,19 +39,31 @@ import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.getString
 
+/*
+SummariseDeclareBuilderViewmodel :
+according to the clean architecture and the MVVM we will apply all of the business logic that are demand to
+connect our screen UI to his data layer
+* arguments : the matched use case class to define the needed functions (according to the clean architecture pattern )
+ */
 @OptIn(ExperimentalResourceApi::class)
-class SummariseDeclareBuilderViewmodel(val summariseBuilderUseCases: SummariseBuilderUseCases):ScreenModel {
-    /*
-   comparedObj :
-   an component of the uiState object , will be an workSession sum (at this screen) , we will get the average of them from our db archive ...
-    */
-    private val builderValuesStateNotes = MutableStateFlow(SummariseBuilderFieldsState(false,false,false))
+class SummariseDeclareBuilderViewmodel(private val summariseBuilderUseCases: SummariseBuilderUseCases):ScreenModel {
 
+   //the feed back for our builder use input fields , an helpful note according to unusual data inputs to the user
+    private val builderValuesStateNotes = MutableStateFlow(SummariseBuilderFieldsState())
+
+    //the two channel type state that will be implemented in our screen UI state in order to get sncak bar messages from the UI
     private val uiMessage = Channel<UiText>()
+    private val navigateMessage = Channel<UiText>()
 
+    //the main use case of submit an declare coroutine job , in order of tracking our coroutine
+    //and make sure we sync it with our vm life cycle
+    private var submitJob: Job? = null
 
-    var submitJob: Job?=null
-
+    /*
+    //    all of the builder fileds will be an independent state flow :
+    //    * that in order to update it frequnetly without coping the all UI state
+    //    mostly for comfort and cleaner code preferences
+    */
     private var summariseBuilderState = MutableStateFlow(SummariseBuilderState(
         startTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
         endTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
@@ -57,16 +71,20 @@ class SummariseDeclareBuilderViewmodel(val summariseBuilderUseCases: SummariseBu
         , baseWage = 35, extras = 55f, delivers = 5
     )
     )
-
+    //the UI screen state , at the private version that will update in this vm and will be observe
+    //at the public UI state
     private var _uiState = MutableStateFlow(SummariseDeclareBuilderUiState(
         totalIncome = (summariseBuilderState.value.totalTime*summariseBuilderState.value.baseWage)+summariseBuilderState.value.extras,
         currentSum = summariseBuilderState.value.toSumObjDomain(),
         uiMessage = uiMessage,
         typeBuilderState = summariseBuilderState.value,
         errorMes = UiText.DynamicString("Clear"),
-        dayOfMonthMenu = listOf()
+        dayOfMonthMenu = listOf(),
+        navigateMessage = navigateMessage
     ))
 
+    //the public ui state we will expose to our UI , will be observing all the necessary flow with our combine
+    //method that will keep it up to date all the time (and will update it in one thread without race conditions)
     val state : StateFlow<SummariseDeclareBuilderUiState> =
         combine(summariseBuilderState, _uiState) {
                 typeBuilderState, state ->
@@ -78,15 +96,24 @@ class SummariseDeclareBuilderViewmodel(val summariseBuilderUseCases: SummariseBu
                 totalIncome = c.totalIncome,
                 uiMessage = uiMessage,
                 errorMes = state.errorMes,
-                dayOfMonthMenu = state.dayOfMonthMenu
+                dayOfMonthMenu = state.dayOfMonthMenu,
+                navigateMessage=navigateMessage
             )
         }.stateIn(screenModelScope, SharingStarted.WhileSubscribed(5000), _uiState.value)
 
     init {
+        //in basic coroutine scope , with then vm life cycle
         screenModelScope.launch {
-
+            //pull our latest base wage obj from the db, and update the UI state accordingly
+            launch {
+                summariseBuilderState.update {
+                    it.copy(baseWage = summariseBuilderUseCases.getBaseWage.invoke())
+                }
+            }
+            //start listing to the note according to builder data , and update the state accordingly
             launch {
                 builderValuesStateNotes.collect{
+                    //could be an function but pretty basic ...
                     var theMes = ""
                     if (!it.delivers)
                         theMes+= getString(Res.string.there_is_no_delivers_mes)
@@ -103,15 +130,17 @@ class SummariseDeclareBuilderViewmodel(val summariseBuilderUseCases: SummariseBu
         }
 
     }
-
+    //according to the clean architecture we will implement one function to dail with all of our screen events
     @OptIn(ExperimentalResourceApi::class)
     fun onSummariseDeclareBuilderEvent(event:SummariseDeclareBuilderEvents){
         when(event){
+            //an matched library at the UI will make sure the data is allwase valid , only updating the state accordingly
             is SummariseDeclareBuilderEvents.OnDate -> {
                 val a = LocalDate.parse(event.date)
-                summariseBuilderState.update { it.copy( startTime = LocalDateTime(date = a, time = it.startTime.time)) }
+                summariseBuilderState.update { it.copy(startTime = LocalDateTime(date = a, time = it.startTime.time)) }
                 onSummariseDeclareBuilderEvent(SummariseDeclareBuilderEvents.OnEndTime(summariseBuilderState.value.endTime.time.toString()))
             }
+            //update the state , and our note state accordingly
             is SummariseDeclareBuilderEvents.OnDelivers ->{
                 val a= event.deliversVal.toInt()
                 summariseBuilderState.update { it.copy(delivers = a) }
@@ -121,6 +150,7 @@ class SummariseDeclareBuilderViewmodel(val summariseBuilderUseCases: SummariseBu
                     builderValuesStateNotes.update { it.copy(delivers = false) }
                 }
             }
+            //update the state , and the related total time attribute according to some minimal edge case validation logic
             is SummariseDeclareBuilderEvents.OnEndTime -> {
                 val a = LocalTime.parse(event.eTime)
                 var theResult =
@@ -147,6 +177,7 @@ class SummariseDeclareBuilderViewmodel(val summariseBuilderUseCases: SummariseBu
                     }
                 }
             }
+            //update the state , and our note state accordingly
             is SummariseDeclareBuilderEvents.OnExtra -> {
                 val a = event.extraVal.toFloat()
                 summariseBuilderState.update { it.copy(extras =a) }
@@ -156,6 +187,7 @@ class SummariseDeclareBuilderViewmodel(val summariseBuilderUseCases: SummariseBu
                     builderValuesStateNotes.update { it.copy(extra = false) }
                 }
             }
+            //update the state , and the related total time attribute according to some minimal edge case validation logic
             is SummariseDeclareBuilderEvents.OnStartTime -> {
                 val a = LocalTime.parse(event.sTime)
                 var theResult=LocalDateTime(date = summariseBuilderState.value.startTime.date, time = a)
@@ -173,28 +205,43 @@ class SummariseDeclareBuilderViewmodel(val summariseBuilderUseCases: SummariseBu
                     }
                 }
             }
-
+            /*
+            the main use case event , submit an declare
+            we deal with the different options according to the validation check with help of an use cases
+            an apply the matched behaviour accordingly to noticed our UI
+            * the validation process is basically business logic , because we call some use case according to clean architecture
+              we cant use another use case to all of that process
+             */
             SummariseDeclareBuilderEvents.OnSubmit -> {
 
                 if(summariseBuilderState.value.totalTime < 2f){
-                    onSummariseDeclareBuilderEvent(SummariseDeclareBuilderEvents.SendUiMessage
-                        (UiText.StringResource(Res.string.fail_time_insert_mes)))
+                    screenModelScope.launch {
+                        onSummariseDeclareBuilderEvent(
+                            SummariseDeclareBuilderEvents.SendUiMessage(
+                                UiText.StringResource(Res.string.fail_time_insert_mes,""))
+                        )
+                    }
                 }else {
+                    //because this process is an IO coroutine , we well be more cautious with that coroutine to make sure we
+                    //not get into race condition or just causing some unnecessary multi threading
                     submitJob?.cancel()
                    submitJob = screenModelScope.launch {
                         /*
                         the insert use case is an suspend fucntion which means as if I would place here an delay the coroutine will be wanting
                         for it , as with await just that the function will wait period .
-                        * accoridngly wwe will update the cahnnle whic is an aSync function as well that will update the listenter on there coroutines...
+                        * accordingly wwe will update the channle whic is an aSync function as well that will update the listenter on there coroutines...
                          */
                        val theObj = summariseBuilderState.value
-                        val result = summariseBuilderUseCases.insertWorkDeclare(theObj)
+                       val result = summariseBuilderUseCases.insertWorkDeclare(theObj).await()
                        val theDate = summariseBuilderState.value.startTime
                        val a ="${theDate.dayOfMonth}/${theDate.month.name}/${theDate.year}"
                         if(result){
                             withContext(Dispatchers.Main) {
+
+                                summariseBuilderUseCases.updateBaseWage.invoke(summariseBuilderState.value.baseWage)
+
                                 onSummariseDeclareBuilderEvent(
-                                    SummariseDeclareBuilderEvents.SendUiMessage
+                                    SummariseDeclareBuilderEvents.SendNavigateMessage
                                         (UiText.StringResource(Res.string.success_insert_mes,a))
                                 )
 
@@ -211,15 +258,21 @@ class SummariseDeclareBuilderViewmodel(val summariseBuilderUseCases: SummariseBu
                 }
             }
 
-
+            //basic connection between the data to the matched channle
             is SummariseDeclareBuilderEvents.SendUiMessage -> {
                 screenModelScope.launch {
                     uiMessage.send(event.mess)
                 }
             }
-
+            //no validation needed straight updating our UI state
             is SummariseDeclareBuilderEvents.OnBaseWage -> {
                 summariseBuilderState.update { it.copy(baseWage = event.baseWage) }
+            }
+            //basic connection between the data to the matched channle
+            is SummariseDeclareBuilderEvents.SendNavigateMessage -> {
+                screenModelScope.launch {
+                    navigateMessage.send(event.mess)
+                }
             }
         }
     }

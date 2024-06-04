@@ -30,7 +30,12 @@ import androidx.compose.ui.unit.dp
 import dataAnalyzer.presentation.uiComponents.CircleValues
 import dataAnalyzer.presentation.util.Dimnations
 
-
+/*
+CircleProgressItem :
+this ui function get the wanted attribute values to present ,includes colors adn etc...
+and create an animatable UI to represent thos values by local host states and local coroutines to
+be updating while working
+ */
 @Composable
 fun CircleProgressItem(
     valueHeader: String,
@@ -44,42 +49,58 @@ fun CircleProgressItem(
     modifier: Modifier
 ) {
 
-
+//declaring the animatable states of the two attributes we want to present
     val baseValueAnimationState = remember {
         Animatable(0f)
     }
     val extraValueAnimationState = remember {
         Animatable(0f)
     }
-
+/*
+two launchedEffect blocks that will be relaunched according to a change of the attribute arguments values,
+what will cause them to reanimate with updates values
+* we will animate at this coroutine block according to the parameters values
+* and apply some legality check if the data is valid to animate
+ */
     LaunchedEffect(key1 = barSize,key2 = barValue1) {
-        val a = if(barValue1.isInfinite()||barValue1.isNaN()){10f}else{barValue1}
         //In order of catching zero and all sort of unUseable values ...
-        baseValueAnimationState.animateTo(
-            targetValue =
-            (a / barSize)
-            ,
-            animationSpec = tween(
-                durationMillis = 1350
+        if(barValue1.isInfinite()||barValue1.isNaN()) {
+            //
+        }else {
+            baseValueAnimationState.animateTo(
+                targetValue =
+                (barValue1 / barSize),
+                animationSpec = tween(
+                    durationMillis = 1350
+                )
             )
-        )
+        }
     }
     LaunchedEffect(key1 = barSize,key2 = barValue2) {
-        val a = if(barValue2.isInfinite()||barValue2.isNaN()){10f}else{barValue2}
         //In order of catching zero and all sort of unUseable values ...
-        extraValueAnimationState.animateTo(
-            targetValue =
-            (a / barSize)
-            ,
-            animationSpec = tween(
-                durationMillis = 1350
+        if (barValue2.isInfinite() || barValue2.isNaN()) {
+            //
+        } else {
+            extraValueAnimationState.animateTo(
+                targetValue =
+                (barValue2 / barSize),
+                animationSpec = tween(
+                    durationMillis = 1350
+                )
             )
-        )
+        }
     }
 
+    //this state and the density reference is in order of tracking the canvas size ,
+    //for implementing matched UI elements inside
     var itemSizeState by remember { mutableStateOf(0.dp) }
     val density = LocalDensity.current
 
+    /*
+    this parts is the actual UI implementation we will use canvas to draw the matched animatable
+    accoridng to the values and the demand attributes
+    * the weight attribute make sure that in a box use we will not get overlap UI ,
+     */
     Column(modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Row(Modifier.weight(1f)) {
 

@@ -7,7 +7,7 @@ this class represent the builder state at live in order of presenting in sync li
 builder sumarise attributes of its data
  */
 data class SummariseBuilderFieldsState(
-    val totalTime:Boolean,
-    val extra:Boolean,
-    val delivers: Boolean
+    val totalTime:Boolean =false,
+    val extra:Boolean=false,
+    val delivers: Boolean=false
 )

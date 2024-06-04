@@ -25,12 +25,19 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import dataAnalyzer.domain.models.models.SumObjDomain
+import dataAnalyzer.presentation.util.Dimnations
 
+/*
+ArchiveItem :
+very similar to teh main Obj header with this function we will represent a bit diffrentaly the sum obj domain obj
+with the help of the sub UI helper functions
+ */
 @Composable
 fun ArchiveItem(theObj:SumObjDomain,
                 onHeaderClick : () ->Unit
                 , modifier: Modifier=Modifier) {
 
+    //declare our item size state and the density in order of implementing the epanded data UI function
     var itemSize by remember { mutableStateOf(0.dp) }
     val density = LocalDensity.current
     Box(modifier = modifier
@@ -53,16 +60,17 @@ fun ArchiveItem(theObj:SumObjDomain,
                 Modifier
                     .clickable { onHeaderClick() }
                     .fillMaxWidth()
-                    .padding(top = 4.dp),
+                    .padding(top =Dimnations.Padding.tiny),
                 horizontalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = theObj.objectName + " :",
+                    text = "${theObj.objectName} :",
                     style = MaterialTheme.typography.displaySmall,
                     color = MaterialTheme.colorScheme.onSecondaryContainer
                 )
             }
-            Spacer(Modifier.height(18.dp))
+            Spacer(Modifier.height(Dimnations.Spacer.medium))
+
             TwoValuesProgressBar(
                 barValComponent1 = theObj.baseIncome,
                 barValComponent2 = theObj.extraIncome,

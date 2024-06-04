@@ -9,10 +9,12 @@ import dataAnalyzer.data.localDb.MongoDB
 import dataAnalyzer.data.repository.RepositoryImpl
 import dataAnalyzer.domain.repository.Repository
 import dataAnalyzer.domain.useCase.GetAllWorkDeclares
+import dataAnalyzer.domain.useCase.GetBaseWage
 import dataAnalyzer.domain.useCase.GetCurrentMonthDeclares
 import dataAnalyzer.domain.useCase.InsertWorkDeclare
 import dataAnalyzer.domain.useCase.screenUsecases.ObjectItemUseCases
 import dataAnalyzer.domain.useCase.SumDomainData
+import dataAnalyzer.domain.useCase.UpdateBaseWage
 import dataAnalyzer.domain.useCase.screenUsecases.SummariseBuilderUseCases
 import dataAnalyzer.presentation.objectItemScreen.ObjectItemScreenClass
 import dataAnalyzer.presentation.objectItemScreen.ObjectItemViewmodel
@@ -71,6 +73,8 @@ fun App(
         single {
             SummariseBuilderUseCases(
                 insertWorkDeclare = InsertWorkDeclare(get()),
+                getBaseWage = GetBaseWage(get()),
+                updateBaseWage = UpdateBaseWage(get())
             )
         }
         factory { ObjectItemViewmodel(get()) }

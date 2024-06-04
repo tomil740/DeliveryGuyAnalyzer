@@ -6,19 +6,15 @@ import dataAnalyzer.domain.models.domain.WorkSum
 import dataAnalyzer.domain.models.util.closeTypesCollections.SumObjectsType
 import dataAnalyzer.domain.useCase.screenUsecases.ObjectItemUseCases
 import dataAnalyzer.presentation.util.DefaultData
-import dataAnalyzer.presentation.util.UiText
 import deliveryguyanalyzer.composeapp.generated.resources.Res
-import deliveryguyanalyzer.composeapp.generated.resources.end_time_prefix
-import deliveryguyanalyzer.composeapp.generated.resources.success_insert_mes
-import kotlinx.coroutines.CoroutineScope
+import deliveryguyanalyzer.composeapp.generated.resources.empty_all_data_list
+import deliveryguyanalyzer.composeapp.generated.resources.empty_month_list
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -81,19 +77,19 @@ class ObjectItemViewmodel(private val objectItemUseCases: ObjectItemUseCases): S
                      withContext(Dispatchers.IO) {
                         //get every month data list by passing the vm scope (controlling it by our job...)
                         //send the data to the sumarise function , return the result object of the all time sumobj
-                        val resutlt = objectItemUseCases.getAllWorkDeclares.invoke().await()
+                        val result = objectItemUseCases.getAllWorkDeclares.invoke().await()
 
-                        if (resutlt.isEmpty()) {
+                        if (result.isEmpty()) {
                             //in case there is no data at all (if some months is missings we just skip them )
                             withContext(Dispatchers.Main) {
-                                uiMessage.send(getString(Res.string.end_time_prefix))
+                                uiMessage.send(getString(Res.string.empty_all_data_list))
                             }
                         } else {
                             /*
                             using another use case on our pulled data to summarise it into the target object...
                              */
                             val theLst = mutableListOf<WorkSum>()
-                            for (month in resutlt) {
+                            for (month in result) {
                                 //the use of the await is processing because as mentioned those could be heavy process that
                                 //depend on each other ...
                                 val a = objectItemUseCases.sumDomainData.getSummarizesDomainObject(
@@ -136,7 +132,7 @@ class ObjectItemViewmodel(private val objectItemUseCases: ObjectItemUseCases): S
                             //in case there is no data at all (if some months is missings we just skip them )
                             withContext(Dispatchers.Main) {
 
-                                uiMessage.send(getString(Res.string.success_insert_mes))
+                                uiMessage.send(getString(Res.string.empty_month_list))
                             }
                         } else {
                             val result = objectItemUseCases.sumDomainData.getSummarizesDomainObject(

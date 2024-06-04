@@ -8,8 +8,11 @@ import dataAnalyzer.domain.models.models.SumObjDomain
 import dataAnalyzer.domain.models.util.closeTypesCollections.SumObjectsType
 import dataAnalyzer.domain.models.util.helperFun.getTimeDifferent
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.Month
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 class DefaultData() {
     /*
@@ -160,23 +163,23 @@ class DefaultData() {
                 averageTimeSubObj = 5f,
             )
         )
-
+     val a = Clock.System.now().toLocalDateTime(TimeZone.UTC)
      var valuedObj: MutableStateFlow<SumObjDomain> =
         MutableStateFlow(
             SumObjDomain(
-                startTime = LocalDateTime(year = 2024, month = Month.APRIL, dayOfMonth = 5, 17, 30),
-                endTime = LocalDateTime(year = 2024, month = Month.APRIL, dayOfMonth = 6, 3, 30),
+                startTime = LocalDateTime(year = a.year, month = a.month, dayOfMonth = 5, 17, 30),
+                endTime = LocalDateTime(year = a.year, month = a.month, dayOfMonth = 6, 3, 30),
                 totalTime = getTimeDifferent(
                     startTime = LocalDateTime(
-                        year = 2024,
-                        month = Month.APRIL,
+                        year = a.year,
+                        month = a.month,
                         dayOfMonth = 5,
                         17,
                         30
                     ).time,
                     endTime = LocalDateTime(
-                        year = 2024,
-                        month = Month.APRIL,
+                        year = a.year,
+                        month = a.month,
                         dayOfMonth = 6,
                         3,
                         30
@@ -184,50 +187,50 @@ class DefaultData() {
                 ),
                 baseIncome = (getTimeDifferent(
                     startTime = LocalDateTime(
-                        year = 2024,
-                        month = Month.APRIL,
+                        year = a.year,
+                        month = a.month,
                         dayOfMonth = 5,
                         17,
                         30
                     ).time,
                     endTime = LocalDateTime(
-                        year = 2024,
-                        month = Month.APRIL,
+                        year = a.year,
+                        month = a.month,
                         dayOfMonth = 6,
                         3,
                         30
                     ).time
                 ) * 35f),
-                extraIncome = 300f,
-                totalIncome = 6f,
-                delivers = 35,
+                extraIncome = 0f,
+                totalIncome = 0f,
+                delivers = 0,
                 averageIncomePerDelivery1 = (getTimeDifferent(
                     startTime = LocalDateTime(
-                        year = 2024,
-                        month = Month.APRIL,
+                        year = a.year,
+                        month = a.month,
                         dayOfMonth = 5,
                         17,
                         30
                     ).time,
                     endTime = LocalDateTime(
-                        year = 2024,
-                        month = Month.APRIL,
+                        year = a.year,
+                        month = a.month,
                         dayOfMonth = 6,
                         3,
                         30
                     ).time
-                ) * 35f + 300f) / 35f,
+                ) *0),
                 averageIncomePerHour1 = (getTimeDifferent(
                     startTime = LocalDateTime(
-                        year = 2024,
-                        month = Month.APRIL,
+                        year = a.year,
+                        month = a.month,
                         dayOfMonth = 5,
                         17,
                         30
                     ).time,
                     endTime = LocalDateTime(
-                        year = 2024,
-                        month = Month.APRIL,
+                        year = a.year,
+                        month = a.month,
                         dayOfMonth = 6,
                         3,
                         30
@@ -235,27 +238,27 @@ class DefaultData() {
                 ) * 35f + 300f) /
                         getTimeDifferent(
                             startTime = LocalDateTime(
-                                year = 2024,
-                                month = Month.APRIL,
+                                year = a.year,
+                                month = a.month,
                                 dayOfMonth = 5,
                                 17,
                                 30
                             ).time,
                             endTime = LocalDateTime(
-                                year = 2024,
-                                month = Month.APRIL,
+                                year = a.year,
+                                month = a.month,
                                 dayOfMonth = 6,
                                 3,
                                 30
                             ).time
                         ),
-                averageIncomeSubObj1 = 4f,
-                averageIncomeSubObj2 = 3f,
-                averageIncomePerDelivery2 =4f,
-                averageIncomePerHour2 = 5f,
+                averageIncomeSubObj1 = 0f,
+                averageIncomeSubObj2 = 0f,
+                averageIncomePerDelivery2 =0f,
+                averageIncomePerHour2 = 0f,
                 objectType = SumObjectsType.MonthSum,
                 objectName = "",
-                averageTimeSubObj = 7f,
+                averageTimeSubObj = 0f,
             )
         )
     @Composable

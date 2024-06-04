@@ -33,5 +33,13 @@ class RepositoryImpl(private val mongoDB: MongoDB):Repository {
         return mongoDB.getDeclareByDayOfMonth(dayOfMonth = dayOfMonth, yearAndMonth = yearAndMonth).map { it.toWorkSumDomain() }
     }
 
+    override fun getBaseWage(): Int {
+        return mongoDB.getBaseWage()
+    }
+
+    override suspend fun updateBaseWage(baseWage:Int) {
+        mongoDB.updateBaseWage(baseWage)
+    }
+
 }
 

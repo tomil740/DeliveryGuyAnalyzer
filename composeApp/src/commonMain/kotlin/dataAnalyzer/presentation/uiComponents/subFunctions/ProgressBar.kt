@@ -28,7 +28,10 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-
+/*
+ProgressBar :
+an helper UI function that need to present an switchable two attributes values animatable bar
+ */
 @Composable
 fun ProgressBar(
     weekTarget : Int,
@@ -42,7 +45,7 @@ fun ProgressBar(
 ) {
 
 
-
+    //declaring the need two states for animating each attribute value
     val valueAnimationState = remember {
         Animatable(0f)
     }
@@ -51,7 +54,7 @@ fun ProgressBar(
     }
 
 
-
+//an local UI coroutine for validate and launch our first attribute animatable
         LaunchedEffect(key1=value2,key2 = weekTarget) {
             if(value2!=null) {
 
@@ -64,6 +67,7 @@ fun ProgressBar(
 
         }
     }
+    //an local UI coroutine for validate and launch our second attribute animatable
     LaunchedEffect(key1 = value,key2 = weekTarget) {
 
         valueAnimationState.animateTo(
@@ -73,39 +77,9 @@ fun ProgressBar(
                     )
         )
     }
-/*
-        LaunchedEffect(key1 = value, key2 = weekTarget) {
-            valueAnimationState.animateTo(
-                targetValue = if (weekTarget > 0) {
-                    if (value / weekTarget > 1) {
-                        0.95f
-                    } else {
-                        value / weekTarget
-                    }
-                } else 0f,
-                animationSpec = tween(
-                    durationMillis = 1350
-                )
-            )
-            if (valueAnimationState.value == 0.95f) {
-                valueAnimationState.animateTo(
-                    targetValue = if (weekTarget > 0) {
-                        if (value / weekTarget > 1) {
-                            1f
-                        } else {
-                            value / weekTarget
-                        }
-                    } else 0f,
-                    animationSpec = tween(
-                        durationMillis = 5500
-                    )
-                )
-            }
-        }
 
- */
-
-
+    //the UI of our bar with the matched callBack to switch between the two attributes presentation
+    //*the switch will be from the caller function by switching the argument and launching our coroutine*
     Canvas(
         modifier = modifier.clickable { onItemClick() }
     ) {

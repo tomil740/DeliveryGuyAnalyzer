@@ -2,7 +2,6 @@ package dataAnalyzer.presentation.uiComponents
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -15,11 +14,22 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.LastBaseline
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import dataAnalyzer.presentation.util.Dimnations
 import dataAnalyzer.presentation.util.valuePresentation
 
+/*
+UnitDisplay :
+this function in general will represent our value text , we have couple of varints to this function according
+to its arguments :
+* with preFix text to the unit , includes also an callback specific to clicking on it
+* basic value presentation with its matched unit Icon...
+
+the flag that is used to define on which state the function is , is the unitText : String argument
+* when its default "" we will use the behaviour 2 and when isnt option 1
+
+ */
 @Composable
 fun UnitDisplay(
     amount: Float,
@@ -33,6 +43,7 @@ fun UnitDisplay(
     onItemClick : ()->Unit={}) {
 
     var offset by remember { mutableStateOf(8.dp) }
+    val isOption1 = unitText != ""
 
     if (!isMainObj)
         offset = 2.dp
@@ -40,14 +51,11 @@ fun UnitDisplay(
     else{
         offset = 8.dp
     }
-    
-
-
-    Row(modifier = modifier.clickable { onItemClick() }) {
-        if (unitText != ""){
+    val theModifier = if (isOption1){modifier.clickable { onItemClick() }}else{modifier}
+    Row(modifier = theModifier){
+        if (isOption1){
             Text(
                 text = unitText,
-                //style = MaterialTheme.typography.,
                 style = amountTextStyle,
                 color = amountColor,
                 modifier = Modifier
@@ -55,16 +63,14 @@ fun UnitDisplay(
         }
         Text(
             text = valuePresentation(amount),
-            //style = MaterialTheme.typography.,
             style = amountTextStyle,
             color = amountColor,
             modifier = Modifier
         )
-        //Spacer(modifier = Modifier.width(8.dp))//spacing.spaceExtraSmall))
 
         Icon(imageVector = unitIcon, contentDescription = null,modifier= Modifier
-            //.offset(y = offset)
-            .size(amountTextStyle.fontSize.value.dp+14.dp),
+            //the icons should be a bit bigger then the font by that we keep it relative to our text
+            .size(amountTextStyle.fontSize.value.dp + Dimnations.IconSize.tiny),
             tint = iconColor
 
         )

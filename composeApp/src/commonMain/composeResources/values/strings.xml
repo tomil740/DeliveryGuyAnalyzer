@@ -13,6 +13,7 @@
     <string name="end_time_prefix">Until :</string>
     <string name="total_deliveries_prefix">total delivers :</string>
     //builder resources
+    <string name="builder_obj_flag">BL</string>
     <string name="picked_date">Picked date</string>
     <string name="base_hour">Base hour</string>
     <string name="start_time">Start time</string>
@@ -23,7 +24,7 @@
     <string name="delete">Delete</string>
     //messages and notes
     <string name="empty_month_list">"There is no data at the current month..."</string>
-    <string name="empty_all_data_list">"There is no data at the current month..."</string>
+    <string name="empty_all_data_list">"There is no data at all..."</string>
     <string name="success_insert_mes">the new declare of %1$s has been insert successfully</string>
     <string name="fail_time_insert_mes">"Fail to insert because your declare is to shor in %1$s,your work declare must be in minimum of 2 hours long in order to be insert"</string>
     <string name="fail_overlap_insert_mes">the new declare of %1$s has been fail to insert because of an overlap with other work declare please check the date and time  ,try again (the builder data will be saved...)</string>
@@ -31,8 +32,6 @@
     <string name="there_is_no_tips_mes">There is no tips ?</string>
     <string name="there_is_not_enough_time_length_mes">This is unusual work Session time length</string>
     <string name="good_work_session">Nice work session!</string>
-
-
 
 
 
