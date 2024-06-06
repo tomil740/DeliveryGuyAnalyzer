@@ -31,9 +31,9 @@ In order of keep the project  as clean and simple to understand and expended wit
 </p>
 <h3>Data and performance point of view :</h3>
 <p>
-  As mentioned the app build to be convent to expend ,easy to understand and well preform as possible   In order of achieving that our data/domain level are build as mentioned before to be expended in the feature , that is expressed with \n
-* the repository pattern that allows easy replacing of any data sources \n
-* The local db itSelf which is build at at the data layer fully for easy swap between our current noSQL implementation(mongo db realm at that case)  into any SQL regular db… 
+  As mentioned the app build to be convent to expend ,easy to understand and well preform as possible   In order of achieving that our data/domain level are build as mentioned before to be expended in the feature , that is expressed with <br>
+* the repository pattern that allows easy replacing of any data sources <br>
+* The local db itSelf which is build at at the data layer fully for easy swap between our current noSQL implementation(mongo db realm at that case)  into any SQL regular db… <br>
 in general the project is build with high priority to be as modularize as possible for coming future updates 
 </p>
 <h4>Time complexity :</h4>
