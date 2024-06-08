@@ -13,6 +13,28 @@
 <img src="https://github.com/tomil740/DeliveryGuyAnalyzer/assets/126959122/9871b657-3978-46dc-9e48-7bafc6ad8f03" width="170" >
 <img src="https://github.com/tomil740/DeliveryGuyAnalyzer/assets/126959122/ff13ede2-bb01-4b19-807a-4351e277222f" width="170" >
 
+<h1>Define and structure the app idea :</h1>
+<p>
+  After defining the idea to the core of it ,will start the tangible phase by defining the main matched use case to the core idea.
+Which is to update the data and to get the target data.
+Around those we start implemnitating some basic sketch of the solution (the app) until this phase target which is a basic mockup of the app that implement our defined use cases.
+</p>
+<img src="https://github.com/tomil740/DeliveryGuyAnalyzer/assets/126959122/a2f64bd1-0cf3-45bb-a1e2-3dcb1d8ad601" width="170">
+<img src="https://github.com/tomil740/DeliveryGuyAnalyzer/assets/126959122/7f11168c-2197-4c1d-ab36-b53f5e29cbce" width="170">
+<img src="https://github.com/tomil740/DeliveryGuyAnalyzer/assets/126959122/0f083b66-baca-4374-9600-22ca867339bd" width="170">
+<img src="https://github.com/tomil740/DeliveryGuyAnalyzer/assets/126959122/281e9740-41f1-49b0-8b80-3492c764f668" width="170">
+<h3>Implement funcunalty :</h3>
+<p>
+  That will start by defining our data structure , pick the ideal tecnologics and build patterns according to the all around considerations to get the ideal behaviours all around .
+At this phase we will start connecting the dots we place before and accordingly defined the ideal platforms and build patterns to the actual build itSelf which constitutes as real app skeleton. 
+</p>
+
+
+
+
+
+
+
 <h1>teachnolgics and build review :</h1>
 <p>
   The project is build to work perfectly in a native level of performance and UX in all ranges of devices from  both IOS and Android by implemnitating matched dynamic them components to each platform with match UI components according to material 3 and native look matched material components for native IOS feel   the project is build mostly on pure kotlin code and libraries in order of make most of it shred between both platforms
