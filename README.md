@@ -58,12 +58,45 @@ In order of keep the project  as clean and simple to understand and expended wit
 * The local db itSelf which is build at at the data layer fully for easy swap between our current noSQL implementation(mongo db realm at that case)  into any SQL regular db… <br>
 in general the project is build with high priority to be as modularize as possible for coming future updates 
 </p>
+
 <h4>Time complexity :</h4>
 <p>
   The main use case of our project is to summarize data from our local db ,which means the mean demanding process are pulling and summaries the data.
 * all of the matched function were build carefully at the matched threads in order of making sure the UI will always be fast and responsive even in the most edge cases or path unexpected bugs 
 * The Time complexity of the most demanding process will be N linear which is the beset we can achieve here, this level of time complexity let us even at the most edge case to achieve an fast responsible app performance 
 </p>
+
+<h4>Main use case data models implementation :</h4>
+<p>
+The data process will have two starting points <br>
+* Pulling data <br>
+* Pushing data <br>
+</p>
+<h5>Pushing data: </h5>
+<p>
+*We will start with [1] , the user input data to the app -> 
+*then map [1] straight to [4] , while the user types the data ,on every user data change the app will recalculate [4] object accordingly and     present the matched data to the user  ->  * on user submit the app will take the matched [4] (if its matched the legal attributes value to insert declare) and convert it to [2] which is     data object that will update the db data … 
+</p>
+<img src="https://github.com/tomil740/DeliveryGuyAnalyzer/assets/126959122/f6799707-fd4a-411b-b168-2fe0e39a43db" width="650" height = "160">
+<h5>Pulling/Presenting  data :</h5>
+<p>
+We will pull data in two methods <br>
+* pull single work session (one object) <br>
+* pull a list of related object according to the demand <br>
+After pulling data we will want to present it at most cases (or applying some calculations on it)<br>
+
+Presenting data :<br>
+Basically to present data we will aim to get any of the mentioned objects into the 4 object frame according to the demand 
+single object : Presenting single object is pretty much as we mentioned on the builder above ,we will take the data obj we pulled [2] or the builder input [1] and map it straight to [4] <br>
+* The use case of that as for this version is on the builder (as mentioned above) as the finally step of the collection method…<br>
+
+Collection of objects :<br>
+Presenting an collection of object will be actually two steps , 1) sum up the data to an single object with the matched sub objects  attribute and 2) will be to present it as a single object …
+Sum up the collection : the data will be pull with a query according to the user demand for a X month as example then the summaries use case will take this data and calculate from it single workSum object [3] represent all of the list data -> from there all that has left to do is to map it into [4] …
+</p>
+<img src="https://github.com/tomil740/DeliveryGuyAnalyzer/assets/126959122/e4171f85-2909-4fb7-854f-a40ff6f59b32" width="800" height = "350">
+
+
 
 
 
