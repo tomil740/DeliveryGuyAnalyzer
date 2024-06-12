@@ -4,14 +4,15 @@
 <img src="https://github.com/tomil740/DeliveryGuyAnalyzer/assets/126959122/91d064ce-4a52-4990-831e-d3a7398e0ebf" width="170 height = "35">
 
 <h1>Project demo :</h1>
-<img src="https://github.com/tomil740/DeliveryGuyAnalyzer/assets/126959122/5187a668-f3f0-4f41-88b5-e695aecf0aea" width="170">
-<img src="https://github.com/tomil740/DeliveryGuyAnalyzer/assets/126959122/eb7ac06a-7b04-4d4e-828c-075cfcb947ab" width="170" >
-<img src="https://github.com/tomil740/DeliveryGuyAnalyzer/assets/126959122/fd0958a1-d1bf-4188-aec7-6e1f494a0fe5" width="170" >
-<img src="https://github.com/tomil740/DeliveryGuyAnalyzer/assets/126959122/b1a30d7c-a183-4e3c-9c3e-41f2c2547bb7" width="170" >
-<img src="https://github.com/tomil740/DeliveryGuyAnalyzer/assets/126959122/093ccf8f-fc79-48c6-8d8b-63deb916479f" width="170" >
-<img src="https://github.com/tomil740/DeliveryGuyAnalyzer/assets/126959122/3510150b-5747-4ef9-8300-1dae5ce19850" width="170" >
-<img src="https://github.com/tomil740/DeliveryGuyAnalyzer/assets/126959122/9871b657-3978-46dc-9e48-7bafc6ad8f03" width="170" >
-<img src="https://github.com/tomil740/DeliveryGuyAnalyzer/assets/126959122/ff13ede2-bb01-4b19-807a-4351e277222f" width="170" >
+<img width="600" alt="Screenshot 2024-06-12 at 14 26 06" src="https://github.com/tomil740/DeliveryGuyAnalyzer/assets/126959122/c975e3ec-07b9-4020-b7fc-caf5edd3b065">
+<img width="450" alt="Screenshot 2024-06-12 at 14 26 06" src="https://github.com/tomil740/DeliveryGuyAnalyzer/assets/126959122/16a1c9aa-70c7-4e71-b51b-a896806dec05">
+<img width="450" alt="Screenshot 2024-06-12 at 14 26 06" src="https://github.com/tomil740/DeliveryGuyAnalyzer/assets/126959122/f2b165c4-7795-4564-b3ae-ee23b3895d16">
+
+
+
+
+
+
 
 <h1>Define and structure the app idea :</h1>
 <p>
