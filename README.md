@@ -4,15 +4,10 @@
 <img src="https://github.com/tomil740/DeliveryGuyAnalyzer/assets/126959122/91d064ce-4a52-4990-831e-d3a7398e0ebf" width="170 height = "35">
 
 <h1>Project demo :</h1>
-<img width="600" alt="Screenshot 2024-06-12 at 14 26 06" src="https://github.com/tomil740/DeliveryGuyAnalyzer/assets/126959122/c975e3ec-07b9-4020-b7fc-caf5edd3b065">
-<img width="450" alt="Screenshot 2024-06-12 at 14 26 06" src="https://github.com/tomil740/DeliveryGuyAnalyzer/assets/126959122/16a1c9aa-70c7-4e71-b51b-a896806dec05">
-<img width="450" alt="Screenshot 2024-06-12 at 14 26 06" src="https://github.com/tomil740/DeliveryGuyAnalyzer/assets/126959122/f2b165c4-7795-4564-b3ae-ee23b3895d16">
-
-
-
-
-
-
+<img width="600" alt="Screenshot 2024-06-12 at 14 26 06" src = "https://github.com/tomil740/DeliveryGuyAnalyzer/assets/126959122/4381fabd-3b00-495a-8918-d5ebdec93042">
+<h3>Updating data through the live builder or the typed builder :</h3>
+<img alt="Screenshot 2024-06-12 at 15 42 20" src="https://github.com/tomil740/DeliveryGuyAnalyzer/assets/126959122/315b2962-899c-40a1-afe0-4a1376166a31" width=30% height=85%>
+<img alt="Screenshot 2024-06-12 at 15 48 59" src="https://github.com/tomil740/DeliveryGuyAnalyzer/assets/126959122/ef597247-b03c-47a6-bef2-d48160739574" width=65% height=100%>
 
 <h1>Define and structure the app idea :</h1>
 <p>
