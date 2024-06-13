@@ -1,7 +1,7 @@
 <h1>Delivery guy analyzer (MVP version) : </h1>
 <p>Delivery guy analyzer app help an delivery guy to track its working data and provide him with some essential data about his working efficiency and the income in relation to his work / in general , the data can be adjust to any wanted time specific time frame or to an general all time statistics . The app build to be very battery efficient together with simple and clear preps dynamic UI its very convent for the user to track its data and know exactly how much its work worth in actual money at any wanted time frame </p>
-<img src="https://github.com/tomil740/DeliveryGuyAnalyzer/assets/126959122/705c8ebd-1849-45a7-88f1-1121c52aa85b" width="170 height = "35">
-<img src="https://github.com/tomil740/DeliveryGuyAnalyzer/assets/126959122/91d064ce-4a52-4990-831e-d3a7398e0ebf" width="170 height = "35">
+<img src="https://github.com/tomil740/DeliveryGuyAnalyzer/assets/126959122/705c8ebd-1849-45a7-88f1-1121c52aa85b" width="170" >
+<img src="https://github.com/tomil740/DeliveryGuyAnalyzer/assets/126959122/91d064ce-4a52-4990-831e-d3a7398e0ebf" width="170">
 
 <h1>Project demo :</h1>
 <img width="600" alt="Screenshot 2024-06-12 at 14 26 06" src = "https://github.com/tomil740/DeliveryGuyAnalyzer/assets/126959122/4381fabd-3b00-495a-8918-d5ebdec93042">
