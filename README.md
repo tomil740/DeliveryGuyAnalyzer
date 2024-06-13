@@ -9,6 +9,8 @@
 <img alt="Screenshot 2024-06-12 at 15 42 20" src="https://github.com/tomil740/DeliveryGuyAnalyzer/assets/126959122/315b2962-899c-40a1-afe0-4a1376166a31" width=30% height=85%>
 <img alt="Screenshot 2024-06-12 at 15 48 59" src="https://github.com/tomil740/DeliveryGuyAnalyzer/assets/126959122/ef597247-b03c-47a6-bef2-d48160739574" width=55% height=85%>
 
+<h1>How to use :</h1>
+<img width=100% alt="Screenshot 2024-06-12 at 14 26 06" src = "https://github.com/tomil740/DeliveryGuyAnalyzer/assets/126959122/89f6f3fd-a203-4dcb-b05a-4d2f6c099042">
 <h1>Define and structure the app idea :</h1>
 <p>
   After defining the idea to the core of it ,will start the tangible phase by defining the main matched use case to the core idea.
