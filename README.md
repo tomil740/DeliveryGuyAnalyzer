@@ -28,6 +28,15 @@ The project is build to work perfectly in a native level of performance and UX i
 - Material 3 UI components
 - Canvas for the special UI behaviours and objects
 <h1>Define and structure the app idea :</h1>
+<h3>How I came with the idea :</h3>
+I used to work as a delivery guy for quit some time , by that time I worked in all lot of different working platform sometime simultaneously.
+And I used to compare between the platform through some different attribute in order to pick the most lucrative working platform for my work time 
+ To get the data for my decision I asked the long term employs about there work time ,income and etc… 
+Then I found out most of the delivery guys track there income (which is in general not that constant) by some estates and note tracking at the end of every shift…
+Then I come up with my idea an app that will keep track on the delivery guy income and will supply data according to different attributes as working platform or working time and etc… 
+<br>
+<br>
+
 <p>
   After defining the idea to the core of it ,will start the tangible phase by defining the main matched use case to the core idea.
 Which is to update the data and to get the target data.
