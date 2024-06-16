@@ -11,12 +11,19 @@
 
 <h1>How to use :</h1>
 <img width=100% alt="Screenshot 2024-06-12 at 14 26 06" src = "https://github.com/tomil740/DeliveryGuyAnalyzer/assets/126959122/89f6f3fd-a203-4dcb-b05a-4d2f6c099042">
+
+<h1>Features :</h1>
+<h3>Live conclusions dashboard :</h3>
+<img width="573" alt="Screenshot 2024-06-12 at 15 48 59" src="https://github.com/tomil740/DeliveryGuyAnalyzer/assets/126959122/3159cb26-971b-492e-a1f6-726a0e641987">
+<br>
+The app will calculate in a lazy pattern (only what is shown is calculated) the exact conclusion attribute to any picked pice of data  for example the exact hour wage for picked object while shown the entire month hour wage as well This feature will work in live also when the user entering new data.
+
+
 <h1>Under the hood :</h1>
 The project is build to work perfectly in a native level of performance and UX in all ranges of devices from both IOS and Android by implemnitating matched dynamic them components to each platform with match UI components according to material 3 and native look matched material components for native IOS feel the project is build mostly on pure kotlin code and libraries in order of make most of it shred between both platforms
 <ul>
   <li>
-    This MVP version of the app includes all lot of conversions , refactoring and etc that includes core changes  to the app implementation pattern in general through out all most everything , according to that beside the   
-  main use case idea that is shared between the version the projects are tonally different . 
+    This MVP version of the app were build from the ground app with minimum shared code form our full version , that because the full version  features build to be efficient as possible accordingly they are part of the data structure in a level that leaves no options for any refactoring … the bottom line is that both apps shared mostly the core which is the idea itself…
   </li>
 </ul> 
 <h3>patterns and technologies :</h3>
