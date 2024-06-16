@@ -11,6 +11,22 @@
 
 <h1>How to use :</h1>
 <img width=100% alt="Screenshot 2024-06-12 at 14 26 06" src = "https://github.com/tomil740/DeliveryGuyAnalyzer/assets/126959122/89f6f3fd-a203-4dcb-b05a-4d2f6c099042">
+<h1>Under the hood :</h1>
+The project is build to work perfectly in a native level of performance and UX in all ranges of devices from both IOS and Android by implemnitating matched dynamic them components to each platform with match UI components according to material 3 and native look matched material components for native IOS feel the project is build mostly on pure kotlin code and libraries in order of make most of it shred between both platforms
+<ul>
+  <li>
+    This MVP version of the app includes all lot of conversions , refactoring and etc that includes core changes  to the app implementation pattern in general through out all most everything , according to that beside the   
+  main use case idea that is shared between the version the projects are tonally different . 
+  </li>
+</ul> 
+<h3>patterns and technologies :</h3>
+
+- build according to the MVVM and clean architecture
+- Local db with Mongo db realm (noSql db)
+- Di with coin
+- Thread party libs for the user input dialogs and slide pick
+- Material 3 UI components
+- Canvas for the special UI behaviours and objects
 <h1>Define and structure the app idea :</h1>
 <p>
   After defining the idea to the core of it ,will start the tangible phase by defining the main matched use case to the core idea.
